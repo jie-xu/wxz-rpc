@@ -4,8 +4,12 @@ import com.github.wxz.RpcSystemConfig;
 import com.github.wxz.rpc.netty.parallel.NamedThreadFactory;
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
 import com.google.common.util.concurrent.ListeningExecutorService;
+import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -37,10 +41,6 @@ public class MsgRecvExecutor implements ApplicationContextAware {
     private int echoApiPort;
     private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDK_SERIALIZE;
 
-
-
-
-
     /**
      * handlerMap
      */
@@ -63,13 +63,37 @@ public class MsgRecvExecutor implements ApplicationContextAware {
         if (msgRecvExecutor == null) {
             synchronized (MsgRecvExecutor.class) {
                 if (msgRecvExecutor == null) {
-                    return new MsgRecvExecutor();
+                    msgRecvExecutor = new MsgRecvExecutor();
                 }
             }
         }
         return msgRecvExecutor;
     }
 
+    public void start() {
+        try {
+            ServerBootstrap bootstrap = new ServerBootstrap();
+            bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
+                    .childHandler(new MsgRecvChannelInitializer(handlerMap).buildRpcSerializeProtocol(serializeProtocol))
+                    .option(ChannelOption.SO_BACKLOG, 128)
+                    .childOption(ChannelOption.SO_KEEPALIVE, true);
+            String[] ipAddr = serverAddress.split(MsgRecvExecutor.DELIMITER);
+            if (ipAddr.length == RpcSystemConfig.IP_ADDRESS_PORT_ARRAY_LENGTH) {
+                final String host = ipAddr[0];
+                final int port = Integer.parseInt(ipAddr[1]);
+                ChannelFuture future = null;
+                future = bootstrap.bind(host, port).sync();
+                future.addListener((channelFuture) -> {
+                    if (channelFuture.isSuccess()) {
+//TODO
+                    }
+                });
+            }
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void register() {
         //TODO
@@ -81,7 +105,6 @@ public class MsgRecvExecutor implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         //TODO
     }
-
 
     public String getServerAddress() {
         return serverAddress;

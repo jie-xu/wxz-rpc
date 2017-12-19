@@ -19,7 +19,7 @@ public class RpcSystemConfig {
     public static final boolean SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_NUMS != 1;
     public static final boolean SYSTEM_PROPERTY_JMX_METRICS_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0;
     public static final String DELIMITER = ":";
-    public static final int IPADDR_OPRT_ARRAY_LENGTH = 2;
+    public static final int IP_ADDRESS_PORT_ARRAY_LENGTH = 2;
     public static final String RPC_COMPILER_SPI_ATTR = "com.newlandframework.rpc.compiler.AccessAdaptive";
     public static final String RPC_ABILITY_DETAIL_SPI_ATTR = "com.newlandframework.rpc.core.AbilityDetail";
     public static final String FILTER_RESPONSE_MSG = "Illegal request,NettyRPC server refused to respond!";

@@ -17,7 +17,7 @@
     <rpc:registry id="rpcRegistry"
                   ipAddr="${rpc.server.addr}"
                   echoApiPort="${rpc.server.echo.api.port}"
-                  protocol="PROTOSTUFF_SERIALIZE" ></rpc:registry>
+                  protocol="PROTO_STUFF_SERIALIZE" ></rpc:registry>
 
     <bean id="calcAddService" class="com.github.wxz.rpc.service.impl.AddCalculateImpl">
     </bean>

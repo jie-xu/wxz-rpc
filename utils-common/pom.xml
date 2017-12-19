@@ -92,6 +92,21 @@
             <version>2.4.3</version>
         </dependency>
 
+
+        <!-- https://mvnrepository.com/artifact/com.esotericsoftware/kryo -->
+        <dependency>
+            <groupId>com.esotericsoftware</groupId>
+            <artifactId>kryo</artifactId>
+            <version>4.0.1</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.caucho/hessian -->
+        <dependency>
+            <groupId>com.caucho</groupId>
+            <artifactId>hessian</artifactId>
+            <version>4.0.51</version>
+        </dependency>
+
+
         <dependency>
             <groupId>com.dyuproject.protostuff</groupId>
             <artifactId>protostuff-core</artifactId>

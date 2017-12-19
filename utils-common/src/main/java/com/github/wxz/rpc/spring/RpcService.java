@@ -46,7 +46,8 @@ public class RpcService implements ApplicationContextAware, ApplicationListener 
             binder.setObject(applicationContext.getBean(ref));
             binder.setFilter((Filter) applicationContext.getBean(filter));
         }
-        MsgRecvExecutor.getInstance().getHandlerMap().put(interfaceName, binder);
+        MsgRecvExecutor msgRecvExecutor = MsgRecvExecutor.getInstance();
+        msgRecvExecutor.getHandlerMap().put(interfaceName, binder);
     }
 
 

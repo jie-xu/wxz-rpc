@@ -32,8 +32,8 @@ public class RpcRegistery implements InitializingBean, DisposableBean {
         if (RpcSystemConfig.isMonitorServerSupport()) {
             //TODO
         }
+        msgRecvExecutor.start();
 
-//        msgRecvExecu
 
     }
 

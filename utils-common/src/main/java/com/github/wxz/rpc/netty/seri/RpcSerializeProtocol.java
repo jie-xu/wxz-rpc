@@ -13,7 +13,7 @@ public enum RpcSerializeProtocol {
     JDK_SERIALIZE("jdknative"),
     KRYO_SERIALIZE("kryo"),
     HESSIAN_SERIALIZE("hessian"),
-    PROTOSTUFF_SERIALIZE("protostuff");
+    PROTO_STUFF_SERIALIZE("protostuff");
 
     private String serializeProtocol;
 
