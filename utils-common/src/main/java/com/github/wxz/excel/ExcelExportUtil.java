@@ -23,6 +23,7 @@ import java.util.List;
  * @date 2017/12/19 -9:36
  */
 public class ExcelExportUtil {
+
     private static Logger LOGGER = LoggerFactory.getLogger(ExcelExportUtil.class);
 
     /**
@@ -47,6 +48,11 @@ public class ExcelExportUtil {
         return workbook;
     }
 
+    /**
+     * makeSheet
+     * @param workbook
+     * @param dataList
+     */
     private static void makeSheet(HSSFWorkbook workbook, List<?> dataList) {
         // data
         if (dataList == null || dataList.size() == 0) {
@@ -156,6 +162,7 @@ public class ExcelExportUtil {
     }
 
     /**
+     * 样式
      * @param workbook
      * @return
      */

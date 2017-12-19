@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 /**
  * 列属性信息
  * <p>
- * 支持Java对象数据类型：Boolean、String、Short、Integer、Long、Float、Double、Date
+ * 支持Java对象数据类型：Boolean、String、Short、Integer、Long、Float、Double、Date、LocalDateTime
  * 支持Excel的Cell类型为：String
  *
  * @author xianzhi.wang
