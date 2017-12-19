@@ -20,7 +20,7 @@ public class RpcRegistery implements InitializingBean, DisposableBean {
 
     @Override
     public void destroy() throws Exception {
-
+        MsgRecvExecutor.getInstance().stop();
     }
 
     @Override

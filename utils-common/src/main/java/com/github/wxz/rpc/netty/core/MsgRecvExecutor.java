@@ -2,10 +2,12 @@ package com.github.wxz.rpc.netty.core;
 
 import com.github.wxz.RpcSystemConfig;
 import com.github.wxz.rpc.netty.parallel.NamedThreadFactory;
+import com.github.wxz.rpc.netty.resolver.ApiEchoResolver;
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -16,8 +18,7 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.nio.channels.spi.SelectorProvider;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.*;
 
 /**
  * @author xianzhi.wang
@@ -39,6 +40,7 @@ public class MsgRecvExecutor implements ApplicationContextAware {
     EventLoopGroup worker = new NioEventLoopGroup(PARALLEL, threadRpcFactory, SelectorProvider.provider());
     private String serverAddress;
     private int echoApiPort;
+    private int numberOfEchoThreadsPool = 1;
     private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDK_SERIALIZE;
 
     /**
@@ -74,7 +76,8 @@ public class MsgRecvExecutor implements ApplicationContextAware {
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
-                    .childHandler(new MsgRecvChannelInitializer(handlerMap).buildRpcSerializeProtocol(serializeProtocol))
+                    .childHandler(new MsgRecvChannelInitializer(handlerMap)
+                            .buildRpcSerializeProtocol(serializeProtocol))
                     .option(ChannelOption.SO_BACKLOG, 128)
                     .childOption(ChannelOption.SO_KEEPALIVE, true);
             String[] ipAddr = serverAddress.split(MsgRecvExecutor.DELIMITER);
@@ -83,17 +86,46 @@ public class MsgRecvExecutor implements ApplicationContextAware {
                 final int port = Integer.parseInt(ipAddr[1]);
                 ChannelFuture future = null;
                 future = bootstrap.bind(host, port).sync();
-                future.addListener((channelFuture) -> {
-                    if (channelFuture.isSuccess()) {
-//TODO
+
+                future.addListener(new ChannelFutureListener() {
+
+                    @Override
+                    public void operationComplete(final ChannelFuture channelFuture) throws Exception {
+                        if (channelFuture.isSuccess()) {
+                            final ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
+                            ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
+                            completionService.submit(new ApiEchoResolver(host, echoApiPort));
+
+                            System.out.printf("rpc server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n",
+                                    host, port,
+                                    serializeProtocol,
+                                    "",//ModuleMetricsHandler.getStartTime(),
+                                    (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
+
+                            channelFuture.channel().closeFuture().addListener(new ChannelFutureListener() {
+                                @Override
+                                public void operationComplete(final  ChannelFuture future) throws Exception {
+                                    executor.shutdownNow();
+                                }
+                            });
+                        }
                     }
                 });
+
+
             }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
     }
+
+
+    public void stop() {
+        worker.shutdownGracefully();
+        boss.shutdownGracefully();
+    }
+
 
     private void register() {
         //TODO
