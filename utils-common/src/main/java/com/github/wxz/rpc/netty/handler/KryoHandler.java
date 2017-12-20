@@ -1,6 +1,7 @@
 package com.github.wxz.rpc.netty.handler;
 
-import com.github.wxz.rpc.netty.core.MsgRecvHandler;
+import com.github.wxz.rpc.netty.core.recv.MsgRecvHandler;
+import com.github.wxz.rpc.netty.core.send.MsgSendHandler;
 import com.github.wxz.rpc.netty.seri.kryo.KryoCodecUtil;
 import com.github.wxz.rpc.netty.seri.kryo.KryoDecoder;
 import com.github.wxz.rpc.netty.seri.kryo.KryoEncoder;
@@ -15,9 +16,18 @@ import java.util.Map;
  * @author xianzhi.wang
  * @date 2017/12/19 -16:38
  */
-public class KryoRecvHandler implements RpcRecvHandler {
+public class KryoHandler implements RpcHandler {
     @Override
-    public void handle(Map<String, Object> handlerMap, ChannelPipeline pipeline) {
+    public void sendHandle(ChannelPipeline pipeline) {
+        KryoCodecUtil util = new KryoCodecUtil(KryoPoolFactory.getKryoPoolInstance());
+        pipeline.addLast(new KryoEncoder(util));
+        pipeline.addLast(new KryoDecoder(util));
+        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
+        pipeline.addLast(new MsgSendHandler());
+    }
+
+    @Override
+    public void recHandle(Map<String, Object> handlerMap, ChannelPipeline pipeline) {
         KryoCodecUtil util = new KryoCodecUtil(KryoPoolFactory.getKryoPoolInstance());
         pipeline.addLast(new KryoEncoder(util));
         pipeline.addLast(new KryoDecoder(util));

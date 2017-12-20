@@ -3,8 +3,10 @@ package com.github.wxz.rpc.spring;
 import com.github.wxz.rpc.event.ServerStartEvent;
 import com.github.wxz.rpc.filter.Filter;
 import com.github.wxz.rpc.filter.ServiceFilterBinder;
-import com.github.wxz.rpc.netty.core.MsgRecvExecutor;
+import com.github.wxz.rpc.netty.core.recv.MsgRecvExecutor;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -17,6 +19,7 @@ import org.springframework.context.ApplicationListener;
  * @date 2017/12/19 -15:51
  */
 public class RpcService implements ApplicationContextAware, ApplicationListener {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MsgRecvExecutor.class);
 
     private String interfaceName;
     private String ref;
@@ -48,6 +51,7 @@ public class RpcService implements ApplicationContextAware, ApplicationListener 
         }
         MsgRecvExecutor msgRecvExecutor = MsgRecvExecutor.getInstance();
         msgRecvExecutor.getHandlerMap().put(interfaceName, binder);
+        LOGGER.info("put interfaceName {} into msgRecvExecutor handlerMap ....",interfaceName);
     }
 
 

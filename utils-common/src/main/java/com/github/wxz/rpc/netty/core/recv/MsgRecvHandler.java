@@ -1,5 +1,5 @@
 
-package com.github.wxz.rpc.netty.core;
+package com.github.wxz.rpc.netty.core.recv;
 
 import com.github.wxz.rpc.model.MessageRequest;
 import com.github.wxz.rpc.model.MessageResponse;

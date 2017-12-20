@@ -5,15 +5,16 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 
 /**
  * 序列化方式
+ *
  * @author xianzhi.wang
  * @date 2017/12/19 -16:38
  */
 public enum RpcSerializeProtocol {
 
-    JDK_SERIALIZE("jdknative"),
+    JDK_SERIALIZE("jdk_native"),
     KRYO_SERIALIZE("kryo"),
     HESSIAN_SERIALIZE("hessian"),
-    PROTO_STUFF_SERIALIZE("protostuff");
+    PROTO_STUFF_SERIALIZE("proto_stuff");
 
     private String serializeProtocol;
 

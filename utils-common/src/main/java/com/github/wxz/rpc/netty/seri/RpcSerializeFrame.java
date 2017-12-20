@@ -1,6 +1,7 @@
 
 package com.github.wxz.rpc.netty.seri;
 
+import com.github.wxz.rpc.netty.handler.HandlerType;
 import io.netty.channel.ChannelPipeline;
 
 /**
@@ -12,7 +13,8 @@ public interface RpcSerializeFrame {
      * select
      * @param protocol
      * @param pipeline
+     * @param type type
      */
-    void select(RpcSerializeProtocol protocol, ChannelPipeline pipeline);
+    void select(RpcSerializeProtocol protocol, ChannelPipeline pipeline,HandlerType type);
 }
 

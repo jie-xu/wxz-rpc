@@ -1,5 +1,7 @@
 package com.github.wxz.rpc.spring;
 
+import com.github.wxz.rpc.netty.core.send.MsgSendExecutor;
+import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -61,6 +63,7 @@ public class RpcReference implements FactoryBean, InitializingBean, DisposableBe
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        MsgSendExecutor.getInstance().setRpcServerLoader(ipAddr, RpcSerializeProtocol.valueOf(protocol));
 
     }
 }

@@ -1,6 +1,9 @@
-package com.github.wxz.rpc.netty.core;
+package com.github.wxz.rpc.netty.core.recv;
 
 import com.github.wxz.RpcSystemConfig;
+import com.github.wxz.rpc.netty.core.ExecutorManager;
+import com.github.wxz.rpc.netty.core.MsgChannelInitializer;
+import com.github.wxz.rpc.netty.handler.HandlerType;
 import com.github.wxz.rpc.netty.parallel.NamedThreadFactory;
 import com.github.wxz.rpc.netty.resolver.ApiEchoResolver;
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
@@ -88,8 +91,8 @@ public class MsgRecvExecutor extends Thread implements ApplicationContextAware {
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(boss, worker);
             bootstrap.channel(NioServerSocketChannel.class);
-            bootstrap.childHandler(new MsgRecvChannelInitializer(handlerMap)
-                    .buildRpcSerializeProtocol(serializeProtocol));
+            bootstrap.childHandler(new MsgChannelInitializer(handlerMap)
+                    .buildRpcSerializeProtocol(serializeProtocol, HandlerType.REC));
             bootstrap.option(ChannelOption.SO_BACKLOG, 128);
             bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
             String[] ipAddress = serverAddress.split(MsgRecvExecutor.DELIMITER);
@@ -108,11 +111,11 @@ public class MsgRecvExecutor extends Thread implements ApplicationContextAware {
                     future.channel().closeFuture().sync();
                 }
             } else {
-                System.out.printf("rpc Server start fail!\n");
+                LOGGER.info("rpc Server start fail!");
             }
 
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            LOGGER.error("rpc Server start fail!");
         }
     }
 

@@ -1,7 +1,6 @@
-package com.github.wxz.rpc.netty.core;
+package com.github.wxz.rpc.netty.core.send;
 
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
-import com.google.common.reflect.Reflection;
 
 /**
  * msgSend

@@ -1,7 +1,7 @@
 package com.github.wxz.rpc.spring;
 
 import com.github.wxz.RpcSystemConfig;
-import com.github.wxz.rpc.netty.core.MsgRecvExecutor;
+import com.github.wxz.rpc.netty.core.recv.MsgRecvExecutor;
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
