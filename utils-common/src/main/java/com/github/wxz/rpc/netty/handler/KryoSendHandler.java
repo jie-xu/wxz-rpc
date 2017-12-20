@@ -6,6 +6,8 @@ import com.github.wxz.rpc.netty.seri.kryo.KryoDecoder;
 import com.github.wxz.rpc.netty.seri.kryo.KryoEncoder;
 import com.github.wxz.rpc.netty.seri.kryo.KryoPoolFactory;
 import io.netty.channel.ChannelPipeline;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 /**
  * @author xianzhi.wang
@@ -17,6 +19,7 @@ public class KryoSendHandler implements RpcSendHandler {
         KryoCodecUtil util = new KryoCodecUtil(KryoPoolFactory.getKryoPoolInstance());
         pipeline.addLast(new KryoEncoder(util));
         pipeline.addLast(new KryoDecoder(util));
+        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
         pipeline.addLast(new MsgSendHandler());
     }
 }

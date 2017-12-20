@@ -6,6 +6,8 @@ import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffCodecUtil;
 import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffDecoder;
 import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffEncoder;
 import io.netty.channel.ChannelPipeline;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 /**
  * @author xianzhi.wang
@@ -18,6 +20,7 @@ public class ProtoStuffSendHandler implements RpcSendHandler {
         util.setRpcDirect(false);
         pipeline.addLast(new ProtoStuffEncoder(util));
         pipeline.addLast(new ProtoStuffDecoder(util));
+        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
         pipeline.addLast(new MsgSendHandler());
     }
 }

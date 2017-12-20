@@ -6,6 +6,8 @@ import com.github.wxz.rpc.netty.seri.hessian.HessianCodecUtil;
 import com.github.wxz.rpc.netty.seri.hessian.HessianDecoder;
 import com.github.wxz.rpc.netty.seri.hessian.HessianEncoder;
 import io.netty.channel.ChannelPipeline;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 import java.util.Map;
 
@@ -19,6 +21,7 @@ public class HessianRecvHandler implements RpcRecvHandler {
         HessianCodecUtil util = new HessianCodecUtil();
         pipeline.addLast(new HessianEncoder(util));
         pipeline.addLast(new HessianDecoder(util));
+        pipeline.addLast("logging",new LoggingHandler(LogLevel.WARN));
         pipeline.addLast(new MsgRecvHandler(handlerMap));
     }
 }

@@ -1,4 +1,3 @@
-
 package com.github.wxz.rpc.netty.handler;
 
 import com.github.wxz.rpc.netty.core.MsgSendHandler;
@@ -9,6 +8,8 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 /**
  * @author xianzhi.wang
@@ -21,6 +22,7 @@ public class JdkNativeSendHandler implements RpcSendHandler {
         pipeline.addLast(new LengthFieldPrepender(MessageCodecUtil.MESSAGE_LENGTH));
         pipeline.addLast(new ObjectEncoder());
         pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
+        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
         pipeline.addLast(new MsgSendHandler());
     }
 }

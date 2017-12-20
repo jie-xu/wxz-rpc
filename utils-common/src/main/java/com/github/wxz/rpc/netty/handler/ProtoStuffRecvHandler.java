@@ -5,6 +5,8 @@ import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffCodecUtil;
 import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffDecoder;
 import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffEncoder;
 import io.netty.channel.ChannelPipeline;
+import io.netty.handler.logging.LogLevel;
+import io.netty.handler.logging.LoggingHandler;
 
 import java.util.Map;
 
@@ -19,6 +21,7 @@ public class ProtoStuffRecvHandler implements RpcRecvHandler {
         util.setRpcDirect(true);
         pipeline.addLast(new ProtoStuffEncoder(util));
         pipeline.addLast(new ProtoStuffDecoder(util));
+        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
         pipeline.addLast(new MsgRecvHandler(handlerMap));
     }
 }

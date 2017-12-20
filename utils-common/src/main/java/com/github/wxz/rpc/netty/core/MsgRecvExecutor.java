@@ -11,6 +11,8 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -25,6 +27,7 @@ import java.util.concurrent.ThreadFactory;
  * @date 2017/12/19 -17:11
  */
 public class MsgRecvExecutor extends Thread implements ApplicationContextAware {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MsgRecvExecutor.class);
 
     private static final String DELIMITER = RpcSystemConfig.DELIMITER;
     private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL * 2;
@@ -95,8 +98,9 @@ public class MsgRecvExecutor extends Thread implements ApplicationContextAware {
                 final int port = Integer.parseInt(ipAddress[1]);
                 ChannelFuture future = bootstrap.bind(host, port).sync();
                 if (!HTTP_FLAG) {
+                    //开启新的线程,apiEcho
                     ExecutorManager.execute(new ApiEchoResolver(host, echoApiPort));
-                    System.out.printf("rpc server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n",
+                    LOGGER.info("rpc server start success!{},ip: {} port: {} protocol: {}start-time: {} jmx-invoke-metrics: {}",
                             host, port,
                             serializeProtocol,
                             "",//ModuleMetricsHandler.getStartTime(),

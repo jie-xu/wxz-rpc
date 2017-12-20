@@ -11,12 +11,17 @@ import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
+ * ApiEchoResolver
+ *
  * @author xianzhi.wang
  * @date 2017/12/19 -17:11
  */
 public class ApiEchoResolver implements Runnable {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ApiEchoResolver.class);
     private static final boolean SSL = System.getProperty("ssl") != null;
     private String host;
     private int port;
@@ -44,7 +49,7 @@ public class ApiEchoResolver implements Runnable {
             bootStrap.handler(new LoggingHandler(LogLevel.INFO));
             bootStrap.childHandler(new ApiEchoInitializer(sslCtx));
             Channel ch = bootStrap.bind(port).sync().channel();
-            System.out.println("You can open your web browser see rpc server api interface: " +
+            LOGGER.info("You can open your web browser see rpc server api interface: " +
                     (SSL ? "https" : "http") + "://" + host + ":" + port + "/rpc.html");
             ch.closeFuture().sync();
         } catch (Exception e) {
