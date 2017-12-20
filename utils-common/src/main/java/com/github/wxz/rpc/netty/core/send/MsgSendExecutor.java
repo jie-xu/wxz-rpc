@@ -14,9 +14,9 @@ public class MsgSendExecutor {
 
     private RpcServerLoader rpcServerLoader = RpcServerLoader.getInstance();
 
-    public MsgSendExecutor(String serverAddress, RpcSerializeProtocol serializeProtocol) {
-        rpcServerLoader.load(serverAddress, serializeProtocol);
-    }
+//    public MsgSendExecutor(String serverAddress, RpcSerializeProtocol serializeProtocol) {
+//        rpcServerLoader.load(serverAddress, serializeProtocol);
+//    }
 
     public void setRpcServerLoader(String serverAddress, RpcSerializeProtocol serializeProtocol) {
         rpcServerLoader.load(serverAddress, serializeProtocol);

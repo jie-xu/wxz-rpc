@@ -22,7 +22,7 @@ public class NamedThreadFactory implements ThreadFactory {
     private final ThreadGroup threadGroup;
 
     public NamedThreadFactory() {
-        this("rpcserver-threadpool-" + THREAD_NUMBER.getAndIncrement(), false);
+        this("rpc-server-thread-pool-" + THREAD_NUMBER.getAndIncrement(), false);
     }
 
     public NamedThreadFactory(String prefix) {

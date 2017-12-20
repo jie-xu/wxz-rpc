@@ -12,9 +12,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 
 /**
  * 生产者
+ *
  * @author xianzhi.wang
  * @date 2017/12/19 -15:51
  */
@@ -30,28 +32,28 @@ public class RpcService implements ApplicationContextAware, ApplicationListener 
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
         //事件源：ApplicationContext.publishEvent()方法：用于主动触发容器事件。
-
         //事件：ApplicationEvent类,容器事件，必须由ApplicationContext发布。
-
         applicationContext.publishEvent(new ServerStartEvent(new Object()));
     }
 
+
     @Override
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
-
-        // 事件监听器：ApplicationListener接口，可由容器中任何监听器Bean担任。
-        // onApplicationEvent(ApplicationEvent event)：每当容器内发生任何事件时，此方法都被触发
-        ServiceFilterBinder binder = new ServiceFilterBinder();
-
-        if (StringUtils.isBlank(filter) || !(applicationContext.getBean(filter) instanceof Filter)) {
-            binder.setObject(applicationContext.getBean(ref));
-        } else {
-            binder.setObject(applicationContext.getBean(ref));
-            binder.setFilter((Filter) applicationContext.getBean(filter));
+        //解决加载两次的问题
+        if (applicationEvent instanceof ContextRefreshedEvent) {
+            // 事件监听器：ApplicationListener接口，可由容器中任何监听器Bean担任。
+            // onApplicationEvent(ApplicationEvent event)：每当容器内发生任何事件时，此方法都被触发
+            ServiceFilterBinder binder = new ServiceFilterBinder();
+            if (StringUtils.isBlank(filter) || !(applicationContext.getBean(filter) instanceof Filter)) {
+                binder.setObject(applicationContext.getBean(ref));
+            } else {
+                binder.setObject(applicationContext.getBean(ref));
+                binder.setFilter((Filter) applicationContext.getBean(filter));
+            }
+            MsgRecvExecutor msgRecvExecutor = MsgRecvExecutor.getInstance();
+            msgRecvExecutor.getHandlerMap().putIfAbsent(interfaceName, binder);
+            LOGGER.info("put interfaceName {}   into msgRevExecutor handlerMap ", interfaceName);
         }
-        MsgRecvExecutor msgRecvExecutor = MsgRecvExecutor.getInstance();
-        msgRecvExecutor.getHandlerMap().put(interfaceName, binder);
-        LOGGER.info("put interfaceName {} into msgRecvExecutor handlerMap ....",interfaceName);
     }
 
 

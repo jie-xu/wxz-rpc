@@ -10,17 +10,24 @@
 
     <context:property-placeholder location="classpath:rpc-server.properties"/>
 
-    <rpc:service id="demoAddService"
+    <rpc:service id="addCalculate"
                  interfaceName="com.github.wxz.rpc.service.AddCalculate"
-                 ref="calcAddService" filter="simpleFilter"></rpc:service>
+                 ref="addCalculateImpl" filter="simpleFilter"></rpc:service>
+
+    <bean id="addCalculateImpl" class="com.github.wxz.rpc.service.impl.AddCalculateImpl">
+    </bean>
+<!--
+    <rpc:service id="addCalculate1"
+                 interfaceName="com.github.wxz.rpc.service.AddCalculate1"
+                 ref="addCalculateImpl1" filter="simpleFilter"></rpc:service>
+
+    <bean id="addCalculateImpl1" class="com.github.wxz.rpc.service.impl.AddCalculateImpl">
+    </bean>-->
 
     <rpc:registry id="rpcRegistry"
                   ipAddr="${rpc.server.address}"
                   echoApiPort="${rpc.server.echo.api.port}"
                   protocol="PROTO_STUFF_SERIALIZE" ></rpc:registry>
-
-    <bean id="calcAddService" class="com.github.wxz.rpc.service.impl.AddCalculateImpl">
-    </bean>
 
     <bean id="simpleFilter" class="com.github.wxz.rpc.filter.support.SimpleFilter">
     </bean>

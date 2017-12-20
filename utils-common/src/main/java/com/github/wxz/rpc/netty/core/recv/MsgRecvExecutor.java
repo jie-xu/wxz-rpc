@@ -29,13 +29,13 @@ import java.util.concurrent.ThreadFactory;
  * @author xianzhi.wang
  * @date 2017/12/19 -17:11
  */
-public class MsgRecvExecutor extends Thread implements ApplicationContextAware {
+public class MsgRecvExecutor extends Thread {
     private static final Logger LOGGER = LoggerFactory.getLogger(MsgRecvExecutor.class);
 
     private static final String DELIMITER = RpcSystemConfig.DELIMITER;
     private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL * 2;
-    private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_THREAD_NUMS;
-    private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_QUEUE_NUMS;
+    private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_THREAD_NUMS;
+    private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS;
 
     private static volatile ListeningExecutorService threadPoolExecutor;
 
@@ -126,7 +126,6 @@ public class MsgRecvExecutor extends Thread implements ApplicationContextAware {
         //handlerMap.put(RpcSystemConfig.RPC_ABILITY_DETAIL_SPI_ATTR, new AbilityDetailProvider());
     }
 
-    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         //TODO
     }
