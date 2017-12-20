@@ -7,7 +7,6 @@ import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
 import com.google.common.util.concurrent.ListeningExecutorService;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -18,13 +17,14 @@ import org.springframework.context.ApplicationContextAware;
 
 import java.nio.channels.spi.SelectorProvider;
 import java.util.Map;
-import java.util.concurrent.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ThreadFactory;
 
 /**
  * @author xianzhi.wang
  * @date 2017/12/19 -17:11
  */
-public class MsgRecvExecutor implements ApplicationContextAware {
+public class MsgRecvExecutor extends Thread implements ApplicationContextAware {
 
     private static final String DELIMITER = RpcSystemConfig.DELIMITER;
     private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL * 2;
@@ -34,7 +34,7 @@ public class MsgRecvExecutor implements ApplicationContextAware {
     private static volatile ListeningExecutorService threadPoolExecutor;
 
     private static volatile MsgRecvExecutor msgRecvExecutor = null;
-
+    private static boolean HTTP_FLAG = false;
     ThreadFactory threadRpcFactory = new NamedThreadFactory("rpc ThreadFactory");
     EventLoopGroup boss = new NioEventLoopGroup();
     EventLoopGroup worker = new NioEventLoopGroup(PARALLEL, threadRpcFactory, SelectorProvider.provider());
@@ -72,58 +72,44 @@ public class MsgRecvExecutor implements ApplicationContextAware {
         return msgRecvExecutor;
     }
 
-    public void start() {
+
+    public void shutdown() {
+        worker.shutdownGracefully();
+        boss.shutdownGracefully();
+    }
+
+
+    @Override
+    public void run() {
         try {
             ServerBootstrap bootstrap = new ServerBootstrap();
-            bootstrap.group(boss, worker).channel(NioServerSocketChannel.class)
-                    .childHandler(new MsgRecvChannelInitializer(handlerMap)
-                            .buildRpcSerializeProtocol(serializeProtocol))
-                    .option(ChannelOption.SO_BACKLOG, 128)
-                    .childOption(ChannelOption.SO_KEEPALIVE, true);
-            String[] ipAddr = serverAddress.split(MsgRecvExecutor.DELIMITER);
-            if (ipAddr.length == RpcSystemConfig.IP_ADDRESS_PORT_ARRAY_LENGTH) {
-                final String host = ipAddr[0];
-                final int port = Integer.parseInt(ipAddr[1]);
-                ChannelFuture future = null;
-                future = bootstrap.bind(host, port).sync();
-
-                future.addListener(new ChannelFutureListener() {
-
-                    @Override
-                    public void operationComplete(final ChannelFuture channelFuture) throws Exception {
-                        if (channelFuture.isSuccess()) {
-                            final ExecutorService executor = Executors.newFixedThreadPool(numberOfEchoThreadsPool);
-                            ExecutorCompletionService<Boolean> completionService = new ExecutorCompletionService<>(executor);
-                            completionService.submit(new ApiEchoResolver(host, echoApiPort));
-
-                            System.out.printf("rpc server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n",
-                                    host, port,
-                                    serializeProtocol,
-                                    "",//ModuleMetricsHandler.getStartTime(),
-                                    (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
-
-                            channelFuture.channel().closeFuture().addListener(new ChannelFutureListener() {
-                                @Override
-                                public void operationComplete(final  ChannelFuture future) throws Exception {
-                                    executor.shutdownNow();
-                                }
-                            });
-                        }
-                    }
-                });
-
-
+            bootstrap.group(boss, worker);
+            bootstrap.channel(NioServerSocketChannel.class);
+            bootstrap.childHandler(new MsgRecvChannelInitializer(handlerMap)
+                    .buildRpcSerializeProtocol(serializeProtocol));
+            bootstrap.option(ChannelOption.SO_BACKLOG, 128);
+            bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
+            String[] ipAddress = serverAddress.split(MsgRecvExecutor.DELIMITER);
+            if (ipAddress.length == RpcSystemConfig.IP_ADDRESS_PORT_ARRAY_LENGTH) {
+                final String host = ipAddress[0];
+                final int port = Integer.parseInt(ipAddress[1]);
+                ChannelFuture future = bootstrap.bind(host, port).sync();
+                if (!HTTP_FLAG) {
+                    ExecutorManager.execute(new ApiEchoResolver(host, echoApiPort));
+                    System.out.printf("rpc server start success!\nip:%s\nport:%d\nprotocol:%s\nstart-time:%s\njmx-invoke-metrics:%s\n\n",
+                            host, port,
+                            serializeProtocol,
+                            "",//ModuleMetricsHandler.getStartTime(),
+                            (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
+                    future.channel().closeFuture().sync();
+                }
+            } else {
+                System.out.printf("rpc Server start fail!\n");
             }
 
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-
-    public void stop() {
-        worker.shutdownGracefully();
-        boss.shutdownGracefully();
     }
 
 

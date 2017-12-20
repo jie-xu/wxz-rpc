@@ -8,6 +8,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
+ * 注册
+ *
  * @author xianzhi.wang
  * @date 2017/12/19 -16:00
  */
@@ -17,15 +19,14 @@ public class RpcRegistery implements InitializingBean, DisposableBean {
     private String echoApiPort;
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
-
     @Override
     public void destroy() throws Exception {
-        MsgRecvExecutor.getInstance().stop();
+        MsgRecvExecutor.getInstance().shutdown();
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        MsgRecvExecutor msgRecvExecutor =  MsgRecvExecutor.getInstance();
+        MsgRecvExecutor msgRecvExecutor = MsgRecvExecutor.getInstance();
         msgRecvExecutor.setServerAddress(ipAddr);
         msgRecvExecutor.setEchoApiPort(Integer.parseInt(echoApiPort));
         msgRecvExecutor.setSerializeProtocol(Enum.valueOf(RpcSerializeProtocol.class, protocol));
@@ -33,8 +34,6 @@ public class RpcRegistery implements InitializingBean, DisposableBean {
             //TODO
         }
         msgRecvExecutor.start();
-
-
     }
 
     public String getIpAddr() {

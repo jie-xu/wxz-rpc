@@ -12,6 +12,7 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 
 /**
+ * 生产者
  * @author xianzhi.wang
  * @date 2017/12/19 -15:51
  */
@@ -37,7 +38,6 @@ public class RpcService implements ApplicationContextAware, ApplicationListener 
 
         // 事件监听器：ApplicationListener接口，可由容器中任何监听器Bean担任。
         // onApplicationEvent(ApplicationEvent event)：每当容器内发生任何事件时，此方法都被触发
-
         ServiceFilterBinder binder = new ServiceFilterBinder();
 
         if (StringUtils.isBlank(filter) || !(applicationContext.getBean(filter) instanceof Filter)) {

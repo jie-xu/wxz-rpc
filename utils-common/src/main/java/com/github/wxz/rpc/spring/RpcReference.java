@@ -5,6 +5,8 @@ import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
+ * 消费者
+ *
  * @author xianzhi.wang
  * @date 2017/12/19 -16:04
  */

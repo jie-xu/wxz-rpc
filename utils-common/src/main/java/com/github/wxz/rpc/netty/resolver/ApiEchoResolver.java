@@ -12,13 +12,11 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
-import java.util.concurrent.Callable;
-
 /**
  * @author xianzhi.wang
  * @date 2017/12/19 -17:11
  */
-public class ApiEchoResolver implements Callable<Boolean> {
+public class ApiEchoResolver implements Runnable {
     private static final boolean SSL = System.getProperty("ssl") != null;
     private String host;
     private int port;
@@ -29,35 +27,28 @@ public class ApiEchoResolver implements Callable<Boolean> {
     }
 
     @Override
-    public Boolean call() {
+    public void run() {
         EventLoopGroup bossGroup = new NioEventLoopGroup(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
-
         try {
             SslContext sslCtx = null;
-
             if (SSL) {
                 SelfSignedCertificate ssc = new SelfSignedCertificate();
                 sslCtx = SslContextBuilder.forServer(ssc.certificate(), ssc.privateKey()).build();
             }
 
-            ServerBootstrap b = new ServerBootstrap();
-            b.option(ChannelOption.SO_BACKLOG, 1024);
-            b.group(bossGroup, workerGroup)
-                    .channel(NioServerSocketChannel.class)
-                    .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new ApiEchoInitializer(sslCtx));
-
-            Channel ch = b.bind(port).sync().channel();
-
-            System.err.println("You can open your web browser see rpc server api interface: " +
-                    (SSL ? "https" : "http") + "://" + host + ":" + port + "/NettyRPC.html");
-
+            ServerBootstrap bootStrap = new ServerBootstrap();
+            bootStrap.option(ChannelOption.SO_BACKLOG, 1024);
+            bootStrap.group(bossGroup, workerGroup);
+            bootStrap.channel(NioServerSocketChannel.class);
+            bootStrap.handler(new LoggingHandler(LogLevel.INFO));
+            bootStrap.childHandler(new ApiEchoInitializer(sslCtx));
+            Channel ch = bootStrap.bind(port).sync().channel();
+            System.out.println("You can open your web browser see rpc server api interface: " +
+                    (SSL ? "https" : "http") + "://" + host + ":" + port + "/rpc.html");
             ch.closeFuture().sync();
-            return Boolean.TRUE;
         } catch (Exception e) {
             e.printStackTrace();
-            return Boolean.FALSE;
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();
