@@ -2,7 +2,7 @@ package com.github.wxz.rpc.netty.handler;
 
 import com.github.wxz.rpc.netty.core.recv.MsgRevHandler;
 import com.github.wxz.rpc.netty.core.send.MsgSendHandler;
-import com.github.wxz.rpc.netty.seri.MessageCodecUtil;
+import com.github.wxz.rpc.netty.serialize.MessageCodecUtil;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;

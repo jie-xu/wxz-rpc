@@ -1,8 +1,8 @@
 package com.github.wxz.rpc.netty.core;
 
 import com.github.wxz.rpc.netty.handler.*;
-import com.github.wxz.rpc.netty.seri.RpcSerializeFrame;
-import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
+import com.github.wxz.rpc.netty.serialize.RpcSerializeFrame;
+import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import io.netty.channel.ChannelPipeline;

@@ -2,9 +2,9 @@ package com.github.wxz.rpc.netty.handler;
 
 import com.github.wxz.rpc.netty.core.recv.MsgRevHandler;
 import com.github.wxz.rpc.netty.core.send.MsgSendHandler;
-import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffCodecUtil;
-import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffDecoder;
-import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffEncoder;
+import com.github.wxz.rpc.netty.serialize.protostuff.ProtoStuffCodecUtil;
+import com.github.wxz.rpc.netty.serialize.protostuff.ProtoStuffDecoder;
+import com.github.wxz.rpc.netty.serialize.protostuff.ProtoStuffEncoder;
 import io.netty.channel.ChannelPipeline;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;

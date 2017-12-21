@@ -1,6 +1,6 @@
 //package com.github.wxz.rpc.netty.jmx;
 //
-//import java.util.List;
+//import java.other.List;
 //
 ///**
 // * @author xianzhi.wang

@@ -1,8 +1,8 @@
 package com.github.wxz.rpc.netty.core;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
-import com.github.wxz.rpc.netty.parallel.NamedThreadFactory;
-import com.github.wxz.rpc.netty.parallel.RpcThreadPool;
+import com.github.wxz.rpc.parallel.NamedThreadFactory;
+import com.github.wxz.rpc.parallel.RpcThreadPool;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;

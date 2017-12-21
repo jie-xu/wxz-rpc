@@ -3,7 +3,7 @@ package com.github.wxz.rpc.spring;
 import com.github.wxz.rpc.netty.core.send.ClientStopEvent;
 import com.github.wxz.rpc.netty.core.send.ClientStopEventListener;
 import com.github.wxz.rpc.netty.core.send.MsgSendExecutor;
-import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
+import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
 import com.google.common.eventbus.EventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

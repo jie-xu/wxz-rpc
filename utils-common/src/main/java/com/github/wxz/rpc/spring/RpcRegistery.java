@@ -2,7 +2,7 @@ package com.github.wxz.rpc.spring;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
-import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
+import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

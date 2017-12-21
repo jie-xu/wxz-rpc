@@ -2,7 +2,7 @@ package com.github.wxz.rpc.netty.core.send;
 
 import com.github.wxz.rpc.netty.core.MsgChannelInitializer;
 import com.github.wxz.rpc.netty.handler.HandlerType;
-import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
+import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
