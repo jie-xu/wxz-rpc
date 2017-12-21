@@ -51,7 +51,7 @@ public class ExcelImportUtil {
             }
 
             if (fields==null || fields.size()==0) {
-                throw new RuntimeException(">>>>>>>>>>> xxl-excel error, data field can not be empty.");
+                throw new RuntimeException(">>>>>>>>>>> excel error, data field can not be empty.");
             }
 
             // sheet data
