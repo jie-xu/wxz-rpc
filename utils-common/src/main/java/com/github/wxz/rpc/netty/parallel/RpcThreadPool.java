@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.parallel;
 
-import com.github.wxz.RpcSystemConfig;
+import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.parallel.policy.*;
 import com.github.wxz.rpc.netty.parallel.queue.BlockingQueueType;
 import org.slf4j.Logger;
@@ -23,7 +23,7 @@ public class RpcThreadPool {
      * @return
      */
     public static RejectedExecutionHandler createPolicy() {
-        PolicyType policyType = PolicyType.fromString(System.getProperty(RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_REJECTED_POLICY_ATTR, "XzAbortPolicy"));
+        PolicyType policyType = PolicyType.fromString(System.getProperty(RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_REJECTED_POLICY_ATTR, "XzAbortPolicy"));
         switch (policyType) {
             case BLOCKING_POLICY:
                 return new XzBlockingPolicy();
@@ -49,7 +49,7 @@ public class RpcThreadPool {
      * @return
      */
     public static BlockingQueue<Runnable> createBlockingQueue(int queues) {
-        BlockingQueueType queueType = BlockingQueueType.fromString(System.getProperty(RpcSystemConfig.SYSTEM_PROPERTY_THREADPOOL_QUEUE_NAME_ATTR, "LinkedBlockingQueue"));
+        BlockingQueueType queueType = BlockingQueueType.fromString(System.getProperty(RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NAME_ATTR, "LinkedBlockingQueue"));
         switch (queueType) {
             case LINKED_BLOCKING_QUEUE:
                 return new LinkedBlockingQueue<>();
@@ -67,10 +67,9 @@ public class RpcThreadPool {
     public static Executor getExecutor(int threads, int queues) {
         LOGGER.info("ThreadPool Core[threads:" + threads + ", queues:" + queues + "]");
         String name = "RpcThreadPool";
-        ThreadPoolExecutor executor = new ThreadPoolExecutor(threads, threads, 0, TimeUnit.MILLISECONDS,
+        return  new ThreadPoolExecutor(threads, threads, 0, TimeUnit.MILLISECONDS,
                 createBlockingQueue(queues),
                 new NamedThreadFactory(name, true), createPolicy());
-        return executor;
     }
 
 

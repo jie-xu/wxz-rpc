@@ -1,5 +1,4 @@
-
-package com.github.wxz.rpc.netty.exception;
+package com.github.wxz.rpc.exception;
 
 /**
  * @author xianzhi.wang

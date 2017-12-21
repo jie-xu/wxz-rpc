@@ -1,7 +1,7 @@
 //
 //package com.github.wxz.rpc.netty.resolver;
 //
-//import com.github.wxz.RpcSystemConfig;
+//import com.github.wxz.rpc.config.RpcSystemConfig;
 //import com.newlandframework.rpc.core.AbilityDetailProvider;
 //import com.newlandframework.rpc.jmx.ModuleMetricsProcessor;
 //import io.netty.buffer.Unpooled;

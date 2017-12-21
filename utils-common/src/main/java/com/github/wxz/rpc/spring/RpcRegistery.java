@@ -1,7 +1,7 @@
 package com.github.wxz.rpc.spring;
 
-import com.github.wxz.RpcSystemConfig;
-import com.github.wxz.rpc.netty.core.recv.MsgRecvExecutor;
+import com.github.wxz.rpc.config.RpcSystemConfig;
+import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -14,34 +14,34 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @date 2017/12/19 -16:00
  */
 public class RpcRegistery implements InitializingBean, DisposableBean {
-    private String ipAddr;
+    private String ipAddress;
     private String protocol;
     private String echoApiPort;
     private AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
     @Override
     public void destroy() throws Exception {
-        MsgRecvExecutor.getInstance().shutdown();
+        MsgRevExecutor.getInstance().shutDown();
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        MsgRecvExecutor msgRecvExecutor = MsgRecvExecutor.getInstance();
-        msgRecvExecutor.setServerAddress(ipAddr);
-        msgRecvExecutor.setEchoApiPort(Integer.parseInt(echoApiPort));
-        msgRecvExecutor.setSerializeProtocol(Enum.valueOf(RpcSerializeProtocol.class, protocol));
+        MsgRevExecutor msgRevExecutor = MsgRevExecutor.getInstance();
+        msgRevExecutor.setServerAddress(ipAddress);
+        msgRevExecutor.setEchoApiPort(Integer.parseInt(echoApiPort));
+        msgRevExecutor.setSerializeProtocol(Enum.valueOf(RpcSerializeProtocol.class, protocol));
         if (RpcSystemConfig.isMonitorServerSupport()) {
             //TODO
         }
-        msgRecvExecutor.start();
+        msgRevExecutor.start();
     }
 
-    public String getIpAddr() {
-        return ipAddr;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setIpAddr(String ipAddr) {
-        this.ipAddr = ipAddr;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public String getProtocol() {

@@ -8,6 +8,7 @@ import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,26 +33,35 @@ public class MsgSendInitializeTask implements Callable<Boolean> {
 
     @Override
     public Boolean call() {
-        Bootstrap bootstrap = new Bootstrap();
-        bootstrap.group(eventLoopGroup);
-        bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
-        bootstrap.remoteAddress(serverAddress);
-        bootstrap.handler(new MsgChannelInitializer().buildRpcSerializeProtocol(protocol, HandlerType.SEND));
-        ChannelFuture channelFuture = bootstrap.connect();
-
-        channelFuture.addListener(new ChannelFutureListener() {
-            @Override
-            public void operationComplete(final ChannelFuture future) throws Exception {
-                if (future.isSuccess()) {
-                    MsgSendHandler msgSendHandler = future.channel().pipeline().get(MsgSendHandler.class);
-                    RpcServerLoader.getInstance().setMessageSendHandler(msgSendHandler);
-                } else {
-                    LOGGER.error("future is not success ...");
-                    call();
+        try {
+            Bootstrap bootstrap = new Bootstrap();
+            bootstrap.group(eventLoopGroup);
+            bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
+            bootstrap.remoteAddress(serverAddress);
+            bootstrap.channel(NioSocketChannel.class);
+            bootstrap.handler(
+                    new MsgChannelInitializer().
+                            buildRpcSerializeProtocol(protocol, HandlerType.SEND));
+            ChannelFuture channelFuture = bootstrap.connect().sync();
+            LOGGER.info("----------------  rpc client execute success .. address {}, post {} --------------",
+                    serverAddress.getHostName(), serverAddress.getPort());
+            channelFuture.addListener(new ChannelFutureListener() {
+                @Override
+                public void operationComplete(final ChannelFuture future) throws Exception {
+                    if (future.isSuccess()) {
+                        MsgSendHandler msgSendHandler = future.channel().pipeline().get(MsgSendHandler.class);
+                        RpcServerLoader.getInstance().setMsgSendHandler(msgSendHandler);
+                    } else {
+                        LOGGER.error("future is not success ...");
+                        call();
+                    }
                 }
-            }
-        });
-        channelFuture.channel().pipeline().get(MsgSendHandler.class);
-        return true;
+            });
+            channelFuture.channel().pipeline().get(MsgSendHandler.class);
+            return true;
+        } catch (Exception e) {
+            LOGGER.error("start fail ...", e);
+            return false;
+        }
     }
 }

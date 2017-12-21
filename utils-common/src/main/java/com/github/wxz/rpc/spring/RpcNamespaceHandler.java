@@ -17,8 +17,8 @@ import java.io.Reader;
  * @author xianzhi.wang
  * @date 2017/12/19 -15:45
  */
-public class NettyRpcNamespaceHandler extends NamespaceHandlerSupport {
-    private static final Logger LOGGER = LoggerFactory.getLogger(NettyRpcNamespaceHandler.class);
+public class RpcNamespaceHandler extends NamespaceHandlerSupport {
+    private static final Logger LOGGER = LoggerFactory.getLogger(RpcNamespaceHandler.class);
 
     static {
         Resource resource = new ClassPathResource("rpc-logo.txt");

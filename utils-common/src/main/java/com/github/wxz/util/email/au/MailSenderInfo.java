@@ -1,4 +1,4 @@
-package com.github.wxz.email.au;
+package com.github.wxz.util.email.au;
 
 import javax.mail.Multipart;
 import java.io.File;

@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.core.send;
 
-import com.github.wxz.RpcSystemConfig;
+import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.parallel.RpcThreadPool;
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
 import com.google.common.util.concurrent.*;
@@ -38,7 +38,13 @@ public class RpcServerLoader {
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(PARALLEL);
 
     private Lock lock = new ReentrantLock();
+    /**
+     * connect status
+     */
     private Condition connectStatus = lock.newCondition();
+    /**
+     * handler status
+     */
     private Condition handlerStatus = lock.newCondition();
     private MsgSendHandler msgSendHandler = null;
 
@@ -68,9 +74,11 @@ public class RpcServerLoader {
             String host = ipAddress[0];
             int port = Integer.parseInt(ipAddress[1]);
             final InetSocketAddress remoteAddress = new InetSocketAddress(host, port);
-            LOGGER.info("----------------  rpc client start success ..address {}, post {} --------------", host, port);
+
             ListenableFuture<Boolean> listenableFuture =
-                    threadPoolExecutor.submit(new MsgSendInitializeTask(eventLoopGroup, remoteAddress, serializeProtocol));
+                    threadPoolExecutor.submit(
+                            new MsgSendInitializeTask(eventLoopGroup, remoteAddress, serializeProtocol));
+
             Futures.addCallback(listenableFuture, new FutureCallback<Boolean>() {
                 @Override
                 public void onSuccess(@Nullable Boolean result) {
@@ -103,7 +111,19 @@ public class RpcServerLoader {
         eventLoopGroup.shutdownGracefully();
     }
 
-    public void setMessageSendHandler(MsgSendHandler msgSendHandler) {
+    public MsgSendHandler getMsgSendHandler() throws InterruptedException {
+        try {
+            lock.lock();
+            if (msgSendHandler == null) {
+                connectStatus.await();
+            }
+            return msgSendHandler;
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void setMsgSendHandler(MsgSendHandler msgSendHandler) {
         try {
             lock.lock();
             this.msgSendHandler = msgSendHandler;

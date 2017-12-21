@@ -15,7 +15,7 @@ public class RpcReferenceParser implements BeanDefinitionParser {
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String interfaceName = element.getAttribute("interfaceName");
         String id = element.getAttribute("id");
-        String ipAddr = element.getAttribute("ipAddr");
+        String ipAddress = element.getAttribute("ipAddress");
         String protocolType = element.getAttribute("protocol");
 
         RootBeanDefinition beanDefinition = new RootBeanDefinition();
@@ -23,7 +23,7 @@ public class RpcReferenceParser implements BeanDefinitionParser {
         beanDefinition.setLazyInit(false);
 
         beanDefinition.getPropertyValues().addPropertyValue("interfaceName", interfaceName);
-        beanDefinition.getPropertyValues().addPropertyValue("ipAddr", ipAddr);
+        beanDefinition.getPropertyValues().addPropertyValue("ipAddress", ipAddress);
         beanDefinition.getPropertyValues().addPropertyValue("protocol", protocolType);
 
         parserContext.getRegistry().registerBeanDefinition(id, beanDefinition);

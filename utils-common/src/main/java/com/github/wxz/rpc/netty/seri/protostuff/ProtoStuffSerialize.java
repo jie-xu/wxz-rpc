@@ -6,8 +6,8 @@ package com.github.wxz.rpc.netty.seri.protostuff;
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
 import com.dyuproject.protostuff.Schema;
-import com.github.wxz.rpc.model.MessageRequest;
-import com.github.wxz.rpc.model.MessageResponse;
+import com.github.wxz.rpc.netty.model.MsgRequest;
+import com.github.wxz.rpc.netty.model.MsgResponse;
 import com.github.wxz.rpc.netty.seri.RpcSerialize;
 import org.springframework.objenesis.Objenesis;
 import org.springframework.objenesis.ObjenesisStd;
@@ -39,7 +39,7 @@ public class ProtoStuffSerialize implements RpcSerialize {
     @Override
     public Object deserialize(InputStream input) {
         try {
-            Class cls = isRpcDirect() ? MessageRequest.class : MessageResponse.class;
+            Class cls = isRpcDirect() ? MsgRequest.class : MsgResponse.class;
             Object message = (Object) objenesis.newInstance(cls);
             Schema<Object> schema = getSchema(cls);
             ProtostuffIOUtil.mergeFrom(input, message, schema);

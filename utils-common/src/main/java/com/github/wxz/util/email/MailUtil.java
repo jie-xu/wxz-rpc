@@ -1,7 +1,7 @@
-package com.github.wxz.email;
+package com.github.wxz.util.email;
 
-import com.github.wxz.email.au.MailSend;
-import com.github.wxz.email.au.MailSenderInfo;
+import com.github.wxz.util.email.au.MailSend;
+import com.github.wxz.util.email.au.MailSenderInfo;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;

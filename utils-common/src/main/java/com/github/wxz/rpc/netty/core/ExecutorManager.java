@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.core;
 
-import com.github.wxz.RpcSystemConfig;
+import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.parallel.NamedThreadFactory;
 import com.github.wxz.rpc.netty.parallel.RpcThreadPool;
 

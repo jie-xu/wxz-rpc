@@ -1,6 +1,7 @@
 package com.github.wxz.rpc.netty.core.send;
 
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
+import com.google.common.reflect.Reflection;
 
 /**
  * msgSend
@@ -26,9 +27,9 @@ public class MsgSendExecutor {
         rpcServerLoader.unLoad();
     }
 
-//    public <T> T execute(Class<T> rpcInterface) throws Exception {
-//        return (T) Reflection.newProxy(rpcInterface, new MessageSendProxy<T>());
-//    }
+    public <T> T execute(Class<T> rpcInterface) throws Exception {
+        return (T) Reflection.newProxy(rpcInterface, new MsgSendProxy<T>());
+    }
 
 
     private MsgSendExecutor() {

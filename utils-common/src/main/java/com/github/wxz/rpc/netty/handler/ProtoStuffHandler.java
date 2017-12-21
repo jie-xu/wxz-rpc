@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.handler;
 
-import com.github.wxz.rpc.netty.core.recv.MsgRecvHandler;
+import com.github.wxz.rpc.netty.core.recv.MsgRevHandler;
 import com.github.wxz.rpc.netty.core.send.MsgSendHandler;
 import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffCodecUtil;
 import com.github.wxz.rpc.netty.seri.protostuff.ProtoStuffDecoder;
@@ -34,7 +34,7 @@ public class ProtoStuffHandler implements RpcHandler {
         pipeline.addLast(new ProtoStuffEncoder(util));
         pipeline.addLast(new ProtoStuffDecoder(util));
         pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
-        pipeline.addLast(new MsgRecvHandler(handlerMap));
+        pipeline.addLast(new MsgRevHandler(handlerMap));
     }
 }
 

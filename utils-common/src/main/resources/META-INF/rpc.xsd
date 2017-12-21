@@ -20,7 +20,7 @@
 		<xsd:complexType>
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
-					<xsd:attribute name="ipAddr" type="xsd:string" use="required"/>
+					<xsd:attribute name="ipAddress" type="xsd:string" use="required"/>
 					<xsd:attribute name="echoApiPort" type="xsd:string" use="required"/>
 					<xsd:attribute name="protocol" type="xsd:string" use="required"/>
 				</xsd:extension>
@@ -32,7 +32,7 @@
 			<xsd:complexContent>
 				<xsd:extension base="beans:identifiedType">
 					<xsd:attribute name="interfaceName" type="xsd:string" use="required"/>
-					<xsd:attribute name="ipAddr" type="xsd:string" use="required"/>
+					<xsd:attribute name="ipAddress" type="xsd:string" use="required"/>
 					<xsd:attribute name="protocol" type="xsd:string" use="required"/>
 				</xsd:extension>
 			</xsd:complexContent>

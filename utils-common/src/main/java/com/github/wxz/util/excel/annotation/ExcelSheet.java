@@ -1,4 +1,4 @@
-package com.github.wxz.excel.annotation;
+package com.github.wxz.util.excel.annotation;
 
 import org.apache.poi.hssf.util.HSSFColor;
 

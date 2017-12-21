@@ -1,6 +1,6 @@
-package com.github.wxz.excel;
+package com.github.wxz.util.excel;
 
-import com.github.wxz.excel.annotation.ExcelSheet;
+import com.github.wxz.util.excel.annotation.ExcelSheet;
 import com.github.wxz.util.FieldReflectionUtil;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Row;

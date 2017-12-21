@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.core.recv;
 
-import com.github.wxz.RpcSystemConfig;
+import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.ExecutorManager;
 import com.github.wxz.rpc.netty.core.MsgChannelInitializer;
 import com.github.wxz.rpc.netty.handler.HandlerType;
@@ -29,24 +29,35 @@ import java.util.concurrent.ThreadFactory;
  * @author xianzhi.wang
  * @date 2017/12/19 -17:11
  */
-public class MsgRecvExecutor extends Thread {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MsgRecvExecutor.class);
+public class MsgRevExecutor extends Thread implements ApplicationContextAware {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MsgRevExecutor.class);
 
-    private static final String DELIMITER = RpcSystemConfig.DELIMITER;
-    private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL * 2;
+    private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL;
+
     private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_THREAD_NUMS;
     private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS;
 
     private static volatile ListeningExecutorService threadPoolExecutor;
 
-    private static volatile MsgRecvExecutor msgRecvExecutor = null;
-    private static boolean HTTP_FLAG = false;
+    private static volatile MsgRevExecutor msgRevExecutor = null;
+
+    /**
+     * 是否开启http
+     */
+    private static boolean HTTP_FLAG = true;
+
     ThreadFactory threadRpcFactory = new NamedThreadFactory("rpc ThreadFactory");
+
     EventLoopGroup boss = new NioEventLoopGroup();
-    EventLoopGroup worker = new NioEventLoopGroup(PARALLEL, threadRpcFactory, SelectorProvider.provider());
+    EventLoopGroup worker = new NioEventLoopGroup(
+            PARALLEL, threadRpcFactory,
+            SelectorProvider.provider());
+
     private String serverAddress;
     private int echoApiPort;
+
     private int numberOfEchoThreadsPool = 1;
+
     private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDK_SERIALIZE;
 
     /**
@@ -57,7 +68,7 @@ public class MsgRecvExecutor extends Thread {
     /**
      * 构造器
      */
-    private MsgRecvExecutor() {
+    private MsgRevExecutor() {
         handlerMap.clear();
         register();
     }
@@ -67,19 +78,21 @@ public class MsgRecvExecutor extends Thread {
      *
      * @return
      */
-    public static MsgRecvExecutor getInstance() {
-        if (msgRecvExecutor == null) {
-            synchronized (MsgRecvExecutor.class) {
-                if (msgRecvExecutor == null) {
-                    msgRecvExecutor = new MsgRecvExecutor();
+    public static MsgRevExecutor getInstance() {
+        if (msgRevExecutor == null) {
+            synchronized (MsgRevExecutor.class) {
+                if (msgRevExecutor == null) {
+                    msgRevExecutor = new MsgRevExecutor();
                 }
             }
         }
-        return msgRecvExecutor;
+        return msgRevExecutor;
     }
 
-
-    public void shutdown() {
+    /**
+     * shutDown
+     */
+    public void shutDown() {
         worker.shutdownGracefully();
         boss.shutdownGracefully();
     }
@@ -95,15 +108,15 @@ public class MsgRecvExecutor extends Thread {
                     .buildRpcSerializeProtocol(serializeProtocol, HandlerType.REC));
             bootstrap.option(ChannelOption.SO_BACKLOG, 128);
             bootstrap.childOption(ChannelOption.SO_KEEPALIVE, true);
-            String[] ipAddress = serverAddress.split(MsgRecvExecutor.DELIMITER);
+            String[] ipAddress = serverAddress.split(RpcSystemConfig.DELIMITER);
             if (ipAddress.length == RpcSystemConfig.IP_ADDRESS_PORT_ARRAY_LENGTH) {
                 final String host = ipAddress[0];
                 final int port = Integer.parseInt(ipAddress[1]);
                 ChannelFuture future = bootstrap.bind(host, port).sync();
-                if (!HTTP_FLAG) {
+                if (HTTP_FLAG) {
                     //开启新的线程,apiEcho
                     ExecutorManager.execute(new ApiEchoResolver(host, echoApiPort));
-                    LOGGER.info("rpc server start success!{},ip: {} port: {} protocol: {}start-time: {} jmx-invoke-metrics: {}",
+                    LOGGER.info("rpc server execute success!{},ip: {} port: {} protocol: {}execute-time: {} jmx-invoke-metrics: {}",
                             host, port,
                             serializeProtocol,
                             "",//ModuleMetricsHandler.getStartTime(),
@@ -111,11 +124,11 @@ public class MsgRecvExecutor extends Thread {
                     future.channel().closeFuture().sync();
                 }
             } else {
-                LOGGER.info("rpc Server start fail!");
+                LOGGER.info("rpc Server execute fail!");
             }
 
         } catch (InterruptedException e) {
-            LOGGER.error("rpc Server start fail!");
+            LOGGER.error("rpc Server execute fail!");
         }
     }
 
@@ -126,6 +139,7 @@ public class MsgRecvExecutor extends Thread {
         //handlerMap.put(RpcSystemConfig.RPC_ABILITY_DETAIL_SPI_ATTR, new AbilityDetailProvider());
     }
 
+    @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         //TODO
     }

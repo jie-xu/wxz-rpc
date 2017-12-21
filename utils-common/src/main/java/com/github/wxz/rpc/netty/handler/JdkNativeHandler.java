@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.handler;
 
-import com.github.wxz.rpc.netty.core.recv.MsgRecvHandler;
+import com.github.wxz.rpc.netty.core.recv.MsgRevHandler;
 import com.github.wxz.rpc.netty.core.send.MsgSendHandler;
 import com.github.wxz.rpc.netty.seri.MessageCodecUtil;
 import io.netty.channel.ChannelPipeline;
@@ -37,7 +37,7 @@ public class JdkNativeHandler implements RpcHandler {
         pipeline.addLast(new ObjectEncoder());
         pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
         pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
-        pipeline.addLast(new MsgRecvHandler(handlerMap));
+        pipeline.addLast(new MsgRevHandler(handlerMap));
     }
 }
 

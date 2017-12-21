@@ -25,7 +25,7 @@
     </bean>-->
 
     <rpc:registry id="rpcRegistry"
-                  ipAddr="${rpc.server.address}"
+                  ipAddress="${rpc.server.address}"
                   echoApiPort="${rpc.server.echo.api.port}"
                   protocol="PROTO_STUFF_SERIALIZE" ></rpc:registry>
 

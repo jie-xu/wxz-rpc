@@ -1,14 +1,15 @@
-
 package com.github.wxz.rpc.netty.core.send;
 
-import com.github.wxz.rpc.model.MessageRequest;
-import com.github.wxz.rpc.model.MessageResponse;
-import com.github.wxz.rpc.netty.core.MessageCallBack;
+import com.github.wxz.rpc.netty.core.MsgCallBack;
+import com.github.wxz.rpc.netty.model.MsgRequest;
+import com.github.wxz.rpc.netty.model.MsgResponse;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.net.SocketAddress;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,23 +19,23 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2017/12/19 -17:11
  */
 public class MsgSendHandler extends ChannelInboundHandlerAdapter {
-
-    private ConcurrentHashMap<String, MessageCallBack> mapCallBack = new ConcurrentHashMap<String, MessageCallBack>();
+    private static final Logger LOGGER = LoggerFactory.getLogger(MsgSendHandler.class);
+    private ConcurrentHashMap<String, MsgCallBack> mapCallBack = new ConcurrentHashMap<>();
     private volatile Channel channel;
-    private SocketAddress remoteAddr;
+    private SocketAddress remoteAddress;
 
     public Channel getChannel() {
         return channel;
     }
 
-    public SocketAddress getRemoteAddr() {
-        return remoteAddr;
+    public SocketAddress getRemoteAddress() {
+        return remoteAddress;
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        this.remoteAddr = this.channel.remoteAddress();
+        this.remoteAddress = this.channel.remoteAddress();
     }
 
     @Override
@@ -45,9 +46,9 @@ public class MsgSendHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        MessageResponse response = (MessageResponse) msg;
+        MsgResponse response = (MsgResponse) msg;
         String messageId = response.getMessageId();
-        MessageCallBack callBack = mapCallBack.get(messageId);
+        MsgCallBack callBack = mapCallBack.get(messageId);
         if (callBack != null) {
             mapCallBack.remove(messageId);
             callBack.over(response);
@@ -56,7 +57,7 @@ public class MsgSendHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
-        cause.printStackTrace();
+        LOGGER.error("exception", cause.getMessage());
         ctx.close();
     }
 
@@ -64,8 +65,8 @@ public class MsgSendHandler extends ChannelInboundHandlerAdapter {
         channel.writeAndFlush(Unpooled.EMPTY_BUFFER).addListener(ChannelFutureListener.CLOSE);
     }
 
-    public MessageCallBack sendRequest(MessageRequest request) {
-        MessageCallBack callBack = new MessageCallBack(request);
+    public MsgCallBack sendRequest(MsgRequest request) {
+        MsgCallBack callBack = new MsgCallBack(request);
         mapCallBack.put(request.getMessageId(), callBack);
         channel.writeAndFlush(request);
         return callBack;

@@ -1,6 +1,6 @@
 package com.github.wxz.util;
 
-import com.github.wxz.excel.annotation.ExcelField;
+import com.github.wxz.util.excel.annotation.ExcelField;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;

@@ -3,8 +3,8 @@ package com.github.wxz.rpc.netty.seri.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.pool.KryoFactory;
 import com.esotericsoftware.kryo.pool.KryoPool;
-import com.github.wxz.rpc.model.MessageRequest;
-import com.github.wxz.rpc.model.MessageResponse;
+import com.github.wxz.rpc.netty.model.MsgRequest;
+import com.github.wxz.rpc.netty.model.MsgResponse;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 /**
@@ -20,8 +20,8 @@ public class KryoPoolFactory {
         public Kryo create() {
             Kryo kryo = new Kryo();
             kryo.setReferences(false);
-            kryo.register(MessageRequest.class);
-            kryo.register(MessageResponse.class);
+            kryo.register(MsgRequest.class);
+            kryo.register(MsgResponse.class);
             kryo.setInstantiatorStrategy(new StdInstantiatorStrategy());
             return kryo;
         }

@@ -1,4 +1,4 @@
-package com.github.wxz.email.au;
+package com.github.wxz.util.email.au;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

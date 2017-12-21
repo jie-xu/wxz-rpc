@@ -1,7 +1,12 @@
 package com.github.wxz.rpc.spring;
 
+import com.github.wxz.rpc.netty.core.send.ClientStopEvent;
+import com.github.wxz.rpc.netty.core.send.ClientStopEventListener;
 import com.github.wxz.rpc.netty.core.send.MsgSendExecutor;
 import com.github.wxz.rpc.netty.seri.RpcSerializeProtocol;
+import com.google.common.eventbus.EventBus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -13,9 +18,13 @@ import org.springframework.beans.factory.InitializingBean;
  * @date 2017/12/19 -16:04
  */
 public class RpcReference implements FactoryBean, InitializingBean, DisposableBean {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(RpcReference.class);
     private String interfaceName;
-    private String ipAddr;
+    private String ipAddress;
     private String protocol;
+
+    private EventBus eventBus = new EventBus();
 
     public String getInterfaceName() {
         return interfaceName;
@@ -25,12 +34,12 @@ public class RpcReference implements FactoryBean, InitializingBean, DisposableBe
         this.interfaceName = interfaceName;
     }
 
-    public String getIpAddr() {
-        return ipAddr;
+    public String getIpAddress() {
+        return ipAddress;
     }
 
-    public void setIpAddr(String ipAddr) {
-        this.ipAddr = ipAddr;
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
     }
 
     public String getProtocol() {
@@ -43,16 +52,21 @@ public class RpcReference implements FactoryBean, InitializingBean, DisposableBe
 
     @Override
     public void destroy() throws Exception {
-
+        eventBus.post(new ClientStopEvent(0));
     }
 
     @Override
     public Object getObject() throws Exception {
-        return null;
+        return MsgSendExecutor.getInstance().execute(getObjectType());
     }
 
     @Override
     public Class<?> getObjectType() {
+        try {
+            return this.getClass().getClassLoader().loadClass(interfaceName);
+        } catch (ClassNotFoundException e) {
+            LOGGER.error("spring analyze fail!", e);
+        }
         return null;
     }
 
@@ -63,7 +77,10 @@ public class RpcReference implements FactoryBean, InitializingBean, DisposableBe
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        MsgSendExecutor.getInstance().setRpcServerLoader(ipAddr, RpcSerializeProtocol.valueOf(protocol));
 
+        MsgSendExecutor.getInstance().setRpcServerLoader(ipAddress, RpcSerializeProtocol.valueOf(protocol));
+
+        ClientStopEventListener listener = new ClientStopEventListener();
+        eventBus.register(listener);
     }
 }
