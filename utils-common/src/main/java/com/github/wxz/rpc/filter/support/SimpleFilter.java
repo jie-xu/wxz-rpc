@@ -2,6 +2,8 @@ package com.github.wxz.rpc.filter.support;
 
 import com.github.wxz.rpc.filter.Filter;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 
@@ -10,15 +12,17 @@ import java.lang.reflect.Method;
  * @date 2017/12/19 -16:20
  */
 public class SimpleFilter implements Filter {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SimpleFilter.class);
+
     @Override
     public boolean before(Method method, Object processor, Object[] requestObjects) {
-        System.out.println(StringUtils.center("[SimpleFilter##before]", 48, "*"));
+        LOGGER.info(StringUtils.center("[SimpleFilter##before]", 48, "*"));
         return true;
     }
 
     @Override
     public void after(Method method, Object processor, Object[] requestObjects) {
-        System.out.println(StringUtils.center("[SimpleFilter##after]", 48, "*"));
+        LOGGER.info(StringUtils.center("[SimpleFilter##after]", 48, "*"));
     }
 }
 

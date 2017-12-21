@@ -1,12 +1,11 @@
 package com.github.wxz.rpc.netty.model;
 
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
 /**
- *
  * @author xianzhi.wang
  * @date 2017/12/21 -9:43
  */
@@ -15,8 +14,8 @@ public class MsgRequest implements Serializable {
     private String messageId;
     private String className;
     private String methodName;
-    private transient Class<?>[] typeParameters;
-    private transient Object[] parametersVal;
+    private Class<?>[] typeParameters;
+    private Object[] parametersVal;
     private boolean invokeMetrics = true;
 
     public boolean isInvokeMetrics() {
@@ -69,7 +68,7 @@ public class MsgRequest implements Serializable {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.toStringExclude(this, new String[]{"typeParameters", "parametersVal"});
+        return JSON.toJSONString(this);
     }
 }
 

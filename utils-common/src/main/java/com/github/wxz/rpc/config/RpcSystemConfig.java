@@ -7,7 +7,7 @@ package com.github.wxz.rpc.config;
 public class RpcSystemConfig {
     public static final String SYSTEM_PROPERTY_THREAD_POOL_REJECTED_POLICY_ATTR = "rpc.parallel.rejected.policy";
     public static final String SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NAME_ATTR = "rpc.parallel.queue";
-    public static final long SYSTEM_PROPERTY_MESSAGE_CALLBACK_TIMEOUT = Long.getLong("rpc.default.msg.timeout", 30 * 1000L);
+    public static final long SYSTEM_PROPERTY_MESSAGE_CALLBACK_TIMEOUT = Long.getLong("rpc.default.msg.timeout", 300 * 1000L);
     public static final long SYSTEM_PROPERTY_ASYNC_MESSAGE_CALLBACK_TIMEOUT = Long.getLong("rpc.default.asyncmsg.timeout", 60 * 1000L);
     public static final int SYSTEM_PROPERTY_THREAD_POOL_THREAD_NUMS = Integer.getInteger("rpc.default.thread.nums", 16);
     public static final int SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS = Integer.getInteger("rpc.default.queue.nums", -1);

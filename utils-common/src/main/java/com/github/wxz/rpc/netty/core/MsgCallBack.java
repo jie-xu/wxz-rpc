@@ -73,6 +73,6 @@ public class MsgCallBack {
 
     private boolean getInvokeResult() {
         return (!this.msgResponse.getError().equals(RpcSystemConfig.FILTER_RESPONSE_MSG) &&
-                (!this.msgResponse.isReturnNotNull() || (this.msgResponse.isReturnNotNull() && this.msgResponse.getResult() != null)));
+                (!this.msgResponse.isNotNull() || (this.msgResponse.isNotNull() && this.msgResponse.getResult() != null)));
     }
 }

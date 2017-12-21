@@ -4,10 +4,9 @@ import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.ExecutorManager;
 import com.github.wxz.rpc.netty.core.MsgChannelInitializer;
 import com.github.wxz.rpc.netty.handler.HandlerType;
-import com.github.wxz.rpc.parallel.NamedThreadFactory;
 import com.github.wxz.rpc.netty.resolver.ApiEchoResolver;
 import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
-import com.google.common.util.concurrent.ListeningExecutorService;
+import com.github.wxz.rpc.parallel.NamedThreadFactory;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-
 import java.nio.channels.spi.SelectorProvider;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,11 +31,6 @@ public class MsgRevExecutor extends Thread implements ApplicationContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(MsgRevExecutor.class);
 
     private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL;
-
-    private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_THREAD_NUMS;
-    private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS;
-
-    private static volatile ListeningExecutorService threadPoolExecutor;
 
     private static volatile MsgRevExecutor msgRevExecutor = null;
 
@@ -55,9 +48,6 @@ public class MsgRevExecutor extends Thread implements ApplicationContextAware {
 
     private String serverAddress;
     private int echoApiPort;
-
-    private int numberOfEchoThreadsPool = 1;
-
     private RpcSerializeProtocol serializeProtocol = RpcSerializeProtocol.JDK_SERIALIZE;
 
     /**
@@ -89,6 +79,7 @@ public class MsgRevExecutor extends Thread implements ApplicationContextAware {
         return msgRevExecutor;
     }
 
+
     /**
      * shutDown
      */
@@ -96,7 +87,6 @@ public class MsgRevExecutor extends Thread implements ApplicationContextAware {
         worker.shutdownGracefully();
         boss.shutdownGracefully();
     }
-
 
     @Override
     public void run() {

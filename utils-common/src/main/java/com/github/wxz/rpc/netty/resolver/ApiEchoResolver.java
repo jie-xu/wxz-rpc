@@ -46,7 +46,7 @@ public class ApiEchoResolver implements Runnable {
             bootStrap.option(ChannelOption.SO_BACKLOG, 1024);
             bootStrap.group(bossGroup, workerGroup);
             bootStrap.channel(NioServerSocketChannel.class);
-            bootStrap.handler(new LoggingHandler(LogLevel.INFO));
+            //bootStrap.handler(new LoggingHandler(LogLevel.INFO));
             bootStrap.childHandler(new ApiEchoInitializer(sslCtx));
             Channel ch = bootStrap.bind(port).sync().channel();
             LOGGER.info("You can open your web browser see rpc server api interface: " +

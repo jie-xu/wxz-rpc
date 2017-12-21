@@ -14,6 +14,6 @@ public class AddCalculateImpl implements AddCalculate {
      */
     @Override
     public int add(int a, int b) {
-        return 0;
+        return a + b;
     }
 }

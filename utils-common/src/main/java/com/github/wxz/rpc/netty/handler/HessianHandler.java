@@ -1,4 +1,3 @@
-
 package com.github.wxz.rpc.netty.handler;
 
 import com.github.wxz.rpc.netty.core.recv.MsgRevHandler;
@@ -23,7 +22,7 @@ public class HessianHandler implements RpcHandler {
         HessianCodecUtil util = new HessianCodecUtil();
         pipeline.addLast(new HessianEncoder(util));
         pipeline.addLast(new HessianDecoder(util));
-        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
+        //pipeline.addLast("logging", new LoggingHandler(LogLevel.INFO));
         pipeline.addLast(new MsgSendHandler());
     }
 
@@ -32,7 +31,7 @@ public class HessianHandler implements RpcHandler {
         HessianCodecUtil util = new HessianCodecUtil();
         pipeline.addLast(new HessianEncoder(util));
         pipeline.addLast(new HessianDecoder(util));
-        pipeline.addLast("logging",new LoggingHandler(LogLevel.WARN));
+        //pipeline.addLast("logging", new LoggingHandler(LogLevel.INFO));
         pipeline.addLast(new MsgRevHandler(handlerMap));
     }
 }

@@ -1,5 +1,6 @@
 package com.github.wxz.rpc.netty.serialize;
 
+import com.alibaba.fastjson.JSON;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -24,8 +25,7 @@ public enum RpcSerializeProtocol {
 
     @Override
     public String toString() {
-        ReflectionToStringBuilder.setDefaultStyle(ToStringStyle.SHORT_PREFIX_STYLE);
-        return ReflectionToStringBuilder.toString(this);
+        return JSON.toJSONString(this);
     }
 
     public String getProtocol() {

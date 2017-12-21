@@ -6,6 +6,7 @@ import com.github.wxz.rpc.netty.serialize.protostuff.ProtoStuffCodecUtil;
 import com.github.wxz.rpc.netty.serialize.protostuff.ProtoStuffDecoder;
 import com.github.wxz.rpc.netty.serialize.protostuff.ProtoStuffEncoder;
 import io.netty.channel.ChannelPipeline;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 
@@ -21,9 +22,10 @@ public class ProtoStuffHandler implements RpcHandler {
     public void sendHandle(ChannelPipeline pipeline) {
         ProtoStuffCodecUtil util = new ProtoStuffCodecUtil();
         util.setRpcDirect(false);
+//        pipeline.addLast(new ProtobufDecoder())
         pipeline.addLast(new ProtoStuffEncoder(util));
         pipeline.addLast(new ProtoStuffDecoder(util));
-        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
+        //pipeline.addLast("logging", new LoggingHandler(LogLevel.INFO));
         pipeline.addLast(new MsgSendHandler());
     }
 
@@ -31,9 +33,10 @@ public class ProtoStuffHandler implements RpcHandler {
     public void recHandle(Map<String, Object> handlerMap, ChannelPipeline pipeline) {
         ProtoStuffCodecUtil util = new ProtoStuffCodecUtil();
         util.setRpcDirect(true);
+//        pipeline.addLast(n)
         pipeline.addLast(new ProtoStuffEncoder(util));
         pipeline.addLast(new ProtoStuffDecoder(util));
-        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
+        //pipeline.addLast("logging", new LoggingHandler(LogLevel.INFO));
         pipeline.addLast(new MsgRevHandler(handlerMap));
     }
 }

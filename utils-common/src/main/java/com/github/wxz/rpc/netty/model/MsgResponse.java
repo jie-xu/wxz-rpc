@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.model;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import com.alibaba.fastjson.JSON;
 
 import java.io.Serializable;
 
@@ -13,14 +13,14 @@ public class MsgResponse implements Serializable {
     private String messageId;
     private String error;
     private Object result;
-    private boolean returnNotNull;
+    private boolean notNull;
 
-    public boolean isReturnNotNull() {
-        return returnNotNull;
+    public boolean isNotNull() {
+        return notNull;
     }
 
-    public void setReturnNotNull(boolean returnNotNull) {
-        this.returnNotNull = returnNotNull;
+    public void setNotNull(boolean notNull) {
+        this.notNull = notNull;
     }
 
     public String getMessageId() {
@@ -49,7 +49,7 @@ public class MsgResponse implements Serializable {
 
     @Override
     public String toString() {
-        return ReflectionToStringBuilder.toString(this);
+        return JSON.toJSONString(this);
     }
 }
 

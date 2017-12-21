@@ -22,7 +22,7 @@ public class KryoHandler implements RpcHandler {
         KryoCodecUtil util = new KryoCodecUtil(KryoPoolFactory.getKryoPoolInstance());
         pipeline.addLast(new KryoEncoder(util));
         pipeline.addLast(new KryoDecoder(util));
-        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
+        //pipeline.addLast("logging", new LoggingHandler(LogLevel.INFO));
         pipeline.addLast(new MsgSendHandler());
     }
 
@@ -31,7 +31,7 @@ public class KryoHandler implements RpcHandler {
         KryoCodecUtil util = new KryoCodecUtil(KryoPoolFactory.getKryoPoolInstance());
         pipeline.addLast(new KryoEncoder(util));
         pipeline.addLast(new KryoDecoder(util));
-        pipeline.addLast("logging", new LoggingHandler(LogLevel.WARN));
+        //pipeline.addLast("logging", new LoggingHandler(LogLevel.INFO));
         pipeline.addLast(new MsgRevHandler(handlerMap));
     }
 }
