@@ -15,7 +15,6 @@ import java.util.concurrent.*;
  * @date 2017/12/20 -17:57
  */
 public class RpcThreadPool {
-    private static final Logger LOGGER = LoggerFactory.getLogger(RpcThreadPool.class);
 
     /**
      * 自定义拒绝策略
@@ -63,16 +62,5 @@ public class RpcThreadPool {
         }
         return null;
     }
-
-    public static Executor getExecutor(int threads, int queues) {
-        LOGGER.info("ThreadPool Core[threads:" + threads + ", queues:" + queues + "]");
-        String name = "RpcThreadPool";
-        return  new ThreadPoolExecutor(threads, threads, 0, TimeUnit.MILLISECONDS,
-                createBlockingQueue(queues),
-                new NamedThreadFactory(name, true), createPolicy());
-    }
-
-
-
 
 }

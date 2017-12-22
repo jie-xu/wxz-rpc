@@ -44,6 +44,12 @@ public class MsgSendHandler extends ChannelInboundHandlerAdapter {
         this.channel = ctx.channel();
     }
 
+    /**
+     * rpc客户端发送消息 handle back
+     * @param ctx
+     * @param msg
+     * @throws Exception
+     */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         MsgResponse response = (MsgResponse) msg;

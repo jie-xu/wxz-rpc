@@ -29,7 +29,9 @@ public class MsgCallBack {
     public Object execute() {
         try {
             lock.lock();
+            //等待超时机制
             await();
+
             if (this.msgResponse != null) {
                 boolean success = getInvokeResult();
                 if (success) {
@@ -49,6 +51,11 @@ public class MsgCallBack {
         }
     }
 
+    /**
+     * finish.signal
+     *
+     * @param msgResponse
+     */
     public void over(MsgResponse msgResponse) {
         try {
             lock.lock();
@@ -59,6 +66,9 @@ public class MsgCallBack {
         }
     }
 
+    /**
+     * finish.await;
+     */
     private void await() {
         boolean timeout = false;
         try {
@@ -72,7 +82,9 @@ public class MsgCallBack {
     }
 
     private boolean getInvokeResult() {
-        return (!this.msgResponse.getError().equals(RpcSystemConfig.FILTER_RESPONSE_MSG) &&
-                (!this.msgResponse.isNotNull() || (this.msgResponse.isNotNull() && this.msgResponse.getResult() != null)));
+        return (!this.msgResponse.getError().equals(RpcSystemConfig.FILTER_RESPONSE_MSG)
+                &&
+                (!this.msgResponse.isNotNull()
+                        || (this.msgResponse.isNotNull() && this.msgResponse.getResult() != null)));
     }
 }

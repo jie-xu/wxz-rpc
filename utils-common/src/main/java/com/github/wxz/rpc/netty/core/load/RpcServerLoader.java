@@ -1,9 +1,14 @@
-package com.github.wxz.rpc.netty.core.send;
+package com.github.wxz.rpc.netty.core.load;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
-import com.github.wxz.rpc.parallel.RpcThreadPool;
+import com.github.wxz.rpc.netty.core.send.MsgSendHandler;
+import com.github.wxz.rpc.netty.core.send.MsgSendInitializeTask;
+import com.github.wxz.rpc.parallel.ExecutorManager;
+import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
 import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
-import com.google.common.util.concurrent.*;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import org.slf4j.Logger;
@@ -31,9 +36,7 @@ public class RpcServerLoader {
     private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_THREAD_NUMS;
     private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS;
 
-    private static ListeningExecutorService threadPoolExecutor =
-            MoreExecutors.listeningDecorator(
-                    (ThreadPoolExecutor) RpcThreadPool.getExecutor(threadNums, queueNums));
+    private static volatile ThreadPoolExecutor threadPoolExecutor;
 
     private EventLoopGroup eventLoopGroup = new NioEventLoopGroup(PARALLEL);
 
@@ -46,10 +49,10 @@ public class RpcServerLoader {
      * handler status
      */
     private Condition handlerStatus = lock.newCondition();
+
     private MsgSendHandler msgSendHandler = null;
 
     private RpcServerLoader() {
-
     }
 
     /**
@@ -75,9 +78,24 @@ public class RpcServerLoader {
             int port = Integer.parseInt(ipAddress[1]);
             final InetSocketAddress remoteAddress = new InetSocketAddress(host, port);
 
+            if (threadPoolExecutor == null) {
+                synchronized (MsgRevExecutor.class) {
+                    if (threadPoolExecutor == null) {
+                        threadPoolExecutor =
+                                ExecutorManager.getThreadPoolExecutor(
+                                        "RpcServerLoader",
+                                        threadNums,
+                                        queueNums);
+                    }
+                }
+            }
+
             ListenableFuture<Boolean> listenableFuture =
-                    threadPoolExecutor.submit(
-                            new MsgSendInitializeTask(eventLoopGroup, remoteAddress, serializeProtocol));
+                    ExecutorManager.submit(threadPoolExecutor,
+                            new MsgSendInitializeTask(
+                                    eventLoopGroup,
+                                    remoteAddress,
+                                    serializeProtocol));
 
             Futures.addCallback(listenableFuture, new FutureCallback<Boolean>() {
                 @Override

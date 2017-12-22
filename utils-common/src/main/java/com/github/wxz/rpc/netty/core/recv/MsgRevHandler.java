@@ -4,8 +4,10 @@ import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.invoke.RevInitTaskFacade;
 import com.github.wxz.rpc.netty.model.MsgRequest;
 import com.github.wxz.rpc.netty.model.MsgResponse;
-import com.github.wxz.rpc.parallel.RpcThreadPool;
-import com.google.common.util.concurrent.*;
+import com.github.wxz.rpc.parallel.ExecutorManager;
+import com.google.common.util.concurrent.FutureCallback;
+import com.google.common.util.concurrent.Futures;
+import com.google.common.util.concurrent.ListenableFuture;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -27,7 +29,7 @@ public class MsgRevHandler extends ChannelInboundHandlerAdapter {
     private static int threadNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_THREAD_NUMS;
     private static int queueNums = RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS;
 
-    private static volatile ListeningExecutorService threadPoolExecutor;
+    private static volatile ThreadPoolExecutor threadPoolExecutor;
     private final Map<String, Object> handlerMap;
 
     public MsgRevHandler(Map<String, Object> handlerMap) {
@@ -36,6 +38,7 @@ public class MsgRevHandler extends ChannelInboundHandlerAdapter {
 
     /**
      * 提交任务
+     *
      * @param task
      * @param channelHandlerContext
      * @param request
@@ -47,13 +50,12 @@ public class MsgRevHandler extends ChannelInboundHandlerAdapter {
         if (threadPoolExecutor == null) {
             synchronized (MsgRevExecutor.class) {
                 if (threadPoolExecutor == null) {
-                    threadPoolExecutor = MoreExecutors.listeningDecorator(
-                            (ThreadPoolExecutor)
-                                    RpcThreadPool.getExecutor(threadNums, queueNums));
+                    threadPoolExecutor =
+                            ExecutorManager.getThreadPoolExecutor("MsgRevHandler", threadNums, queueNums);
                 }
             }
         }
-        ListenableFuture<Boolean> listenableFuture = threadPoolExecutor.submit(task);
+        ListenableFuture<Boolean> listenableFuture = ExecutorManager.submit(threadPoolExecutor, task);
         //获取回调
         Futures.addCallback(listenableFuture, new FutureCallback<Boolean>() {
             @Override
@@ -74,6 +76,13 @@ public class MsgRevHandler extends ChannelInboundHandlerAdapter {
         }, threadPoolExecutor);
     }
 
+    /**
+     * rpc server rev handle
+     *
+     * @param ctx
+     * @param msg
+     * @throws Exception
+     */
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         MsgRequest msgRequest = (MsgRequest) msg;

@@ -1,7 +1,7 @@
 package com.github.wxz.rpc.netty.core.recv;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
-import com.github.wxz.rpc.netty.core.ExecutorManager;
+import com.github.wxz.rpc.parallel.ExecutorManager;
 import com.github.wxz.rpc.netty.core.MsgChannelInitializer;
 import com.github.wxz.rpc.netty.handler.HandlerType;
 import com.github.wxz.rpc.netty.resolver.ApiEchoResolver;

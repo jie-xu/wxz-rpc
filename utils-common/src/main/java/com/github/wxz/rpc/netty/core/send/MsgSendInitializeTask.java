@@ -1,6 +1,7 @@
 package com.github.wxz.rpc.netty.core.send;
 
 import com.github.wxz.rpc.netty.core.MsgChannelInitializer;
+import com.github.wxz.rpc.netty.core.load.RpcServerLoader;
 import com.github.wxz.rpc.netty.handler.HandlerType;
 import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
 import io.netty.bootstrap.Bootstrap;
@@ -53,6 +54,7 @@ public class MsgSendInitializeTask implements Callable<Boolean> {
                         RpcServerLoader.getInstance().setMsgSendHandler(msgSendHandler);
                     } else {
                         LOGGER.error("future is not success ...");
+                        //重试1次
                         call();
                     }
                 }

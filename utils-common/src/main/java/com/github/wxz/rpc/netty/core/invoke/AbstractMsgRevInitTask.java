@@ -33,7 +33,10 @@ public abstract class AbstractMsgRevInitTask implements Callable<Boolean> {
         this.handlerMap = handlerMap;
     }
 
-
+    /**
+     * 线程池调用
+     * @return
+     */
     @Override
     public Boolean call() {
         try {
