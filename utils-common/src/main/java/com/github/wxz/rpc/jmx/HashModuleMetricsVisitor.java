@@ -57,6 +57,7 @@ public class HashModuleMetricsVisitor {
 
         map.keySet().stream()
                 .filter(key -> StringUtils.isNotEmpty(key))
+                .filter(key -> map.get(key) != null)
                 .forEach(key -> {
                     try {
                         final List<String> list = utils.getClassMethodSignature(Class.forName(key));

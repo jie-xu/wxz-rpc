@@ -5,6 +5,7 @@ import com.github.wxz.rpc.jmx.HashModuleMetricsVisitor;
 import com.github.wxz.rpc.jmx.ModuleMetricsHandler;
 import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
 import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
+import com.github.wxz.rpc.parallel.ExecutorManager;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -23,7 +24,13 @@ public class RpcRegistery implements InitializingBean, DisposableBean {
 
     @Override
     public void destroy() throws Exception {
+        //关闭rpc server
         MsgRevExecutor.getInstance().shutDown();
+        //关闭JMS
+        if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {
+            ModuleMetricsHandler handler = ModuleMetricsHandler.getInstance();
+            handler.stop();
+        }
     }
 
     @Override
@@ -35,14 +42,18 @@ public class RpcRegistery implements InitializingBean, DisposableBean {
         if (RpcSystemConfig.isMonitorServerSupport()) {
             //TODO
         }
+        //开启 rpc server  http server
         msgRevExecutor.start();
 
-        //支持JMS
+        //开启JMS
         if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {
             HashModuleMetricsVisitor visitor = HashModuleMetricsVisitor.getInstance();
             visitor.signal();
-            ModuleMetricsHandler handler = ModuleMetricsHandler.getInstance();
-            handler.start();
+            ModuleMetricsHandler moduleMetricsHandler = ModuleMetricsHandler.getInstance();
+            //begin..
+            ExecutorManager.execute(
+                    ExecutorManager.getJMXThreadPoolExecutor( 5),
+                    moduleMetricsHandler);
         }
     }
 

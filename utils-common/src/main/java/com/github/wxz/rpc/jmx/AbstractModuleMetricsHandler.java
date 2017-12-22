@@ -1,11 +1,18 @@
 package com.github.wxz.rpc.jmx;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
+import com.github.wxz.rpc.parallel.ExecutorManager;
+import com.github.wxz.rpc.utils.DateUtils;
+
 import javax.management.AttributeChangeNotification;
 import javax.management.MBeanNotificationInfo;
 import javax.management.NotificationBroadcasterSupport;
 import java.lang.management.ManagementFactory;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Queue;
@@ -18,15 +25,15 @@ import java.util.concurrent.locks.LockSupport;
  * @date 2017/12/22 -21:11
  */
 public abstract class AbstractModuleMetricsHandler extends NotificationBroadcasterSupport implements ModuleMetricsVisitorMXBean {
-    private static final int METRICS_VISITOR_LIST_SIZE = HashModuleMetricsVisitor.getInstance().getHashModuleMetricsVisitorListSize();
+    public static final int METRICS_VISITOR_LIST_SIZE = HashModuleMetricsVisitor.getInstance().getHashModuleMetricsVisitorListSize();
     protected static String startTime;
     private final AtomicBoolean locked = new AtomicBoolean(false);
     private final Queue<Thread> waiters = new ConcurrentLinkedQueue<>();
     protected List<ModuleMetricsVisitor> visitorList = new CopyOnWriteArrayList<>();
     private MetricsTask[] tasks = new MetricsTask[METRICS_VISITOR_LIST_SIZE];
     private boolean aggregationTaskFlag = false;
-    private ExecutorService executor =
-            Executors.newFixedThreadPool(METRICS_VISITOR_LIST_SIZE);
+    private ThreadPoolExecutor threadPoolExecutor =
+            ExecutorManager.getJMXThreadPoolExecutor(METRICS_VISITOR_LIST_SIZE);
 
     public AbstractModuleMetricsHandler() {
 
@@ -34,8 +41,10 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
 
     public final static String getStartTime() {
         if (startTime == null) {
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            startTime = format.format(new Date(ManagementFactory.getRuntimeMXBean().getStartTime()));
+            LocalDateTime localDateTime = DateUtils.parseLongToLocalDateTime(
+                    ManagementFactory.getRuntimeMXBean().getStartTime());
+            startTime = DateUtils.localDateTimeToString(
+                    localDateTime);
         }
         return startTime;
     }
@@ -57,7 +66,7 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
             CyclicBarrier barrier = new CyclicBarrier(METRICS_VISITOR_LIST_SIZE, aggregationTask);
             for (int i = 0; i < METRICS_VISITOR_LIST_SIZE; i++) {
                 tasks[i] = new MetricsTask(barrier, HashModuleMetricsVisitor.getInstance().getHashVisitorList().get(i));
-                executor.execute(tasks[i]);
+                ExecutorManager.execute(threadPoolExecutor, tasks[i]);
             }
 
             try {
@@ -106,12 +115,6 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
 
     protected abstract ModuleMetricsVisitor visitCriticalSection(String moduleName, String methodName);
 
-    public ExecutorService getExecutor() {
-        return executor;
-    }
 
-    public void setExecutor(ExecutorService executor) {
-        this.executor = executor;
-    }
 }
 

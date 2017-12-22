@@ -1,4 +1,6 @@
 package com.github.wxz.rpc.jmx;
+import com.github.wxz.rpc.config.RpcSystemConfig;
+
 import javax.management.*;
 import javax.management.openmbean.CompositeData;
 import javax.management.openmbean.CompositeDataSupport;
@@ -70,7 +72,7 @@ public class ModuleMetricsProcessor {
         metrics.append(TABLE_BEGIN);
         ObjectName name = null;
         try {
-            name = new ObjectName(ModuleMetricsHandler.MBEAN_NAME);
+            name = new ObjectName(RpcSystemConfig.MBEAN_NAME);
         } catch (MalformedObjectNameException e) {
             e.printStackTrace();
         }
@@ -87,7 +89,7 @@ public class ModuleMetricsProcessor {
                     long invokeFailCount = (Long) (data.get("invokeFailCount"));
                     long invokeFilterCount = (Long) (data.get("invokeFilterCount"));
                     long invokeTimeStamp = (Long) (data.get("invokeTimeStamp"));
-                    long invokeMinTimeStamp = ((Long) (data.get("invokeMinTimeStamp"))).equals(Long.valueOf(ModuleMetricsVisitor.DEFAULT_INVOKE_MIN_TIMESPAN)) ? Long.valueOf(0L) : (Long) (data.get("invokeMinTimespan"));
+                    long invokeMinTimeStamp = ((Long) (data.get("invokeMinTimeStamp"))).equals(Long.valueOf(ModuleMetricsVisitor.DEFAULT_INVOKE_MIN_TIMESTAMP)) ? Long.valueOf(0L) : (Long) (data.get("invokeMinTimespan"));
                     long invokeMaxTimeStamp = (Long) (data.get("invokeMaxTimeStamp"));
                     String lastStackTraceDetail = (String) (data.get("lastStackTraceDetail"));
                     String lastErrorTime = (String) (data.get("lastErrorTime"));

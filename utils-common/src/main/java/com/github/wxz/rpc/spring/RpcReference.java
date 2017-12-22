@@ -77,7 +77,7 @@ public class RpcReference implements FactoryBean, InitializingBean, DisposableBe
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        //开启rpc client
         MsgSendExecutor.getInstance().setRpcServerLoader(ipAddress, RpcSerializeProtocol.valueOf(protocol));
 
         ClientStopEventListener listener = new ClientStopEventListener();

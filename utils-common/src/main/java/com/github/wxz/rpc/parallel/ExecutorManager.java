@@ -34,12 +34,22 @@ public class ExecutorManager {
                     threadPoolExecutor);
 
     /**
-     * 快速 execute
+     * 快速 execute 1
      *
      * @param runnable
      */
     public static void execute(Runnable runnable) {
         threadPoolExecutor.execute(runnable);
+    }
+
+
+    /**
+     * 快速 execute 2
+     *
+     * @param runnable
+     */
+    public static void execute(ThreadPoolExecutor executor,Runnable runnable) {
+        executor.execute(runnable);
     }
 
     /**
@@ -53,6 +63,22 @@ public class ExecutorManager {
         return ListeningThreadPoolExecutor.submit(callable);
     }
 
+
+    /**
+     * jmx ThreadPoolExecutor
+     * @param threads
+     * @return
+     */
+    public static ThreadPoolExecutor getJMXThreadPoolExecutor(int threads){
+        return new ThreadPoolExecutor(
+                threads,
+                threads,
+                0L, TimeUnit.MILLISECONDS,
+                createBlockingQueue(
+                        -1),
+                new NamedThreadFactory("jmx", true),
+                createPolicy());
+    }
     /**
      * 获取线程池
      *

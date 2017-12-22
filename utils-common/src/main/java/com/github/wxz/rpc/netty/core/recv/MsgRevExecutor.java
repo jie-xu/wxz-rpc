@@ -1,6 +1,8 @@
 package com.github.wxz.rpc.netty.core.recv;
 
+import com.github.wxz.rpc.ability.AbilityDetailProvider;
 import com.github.wxz.rpc.config.RpcSystemConfig;
+import com.github.wxz.rpc.jmx.ModuleMetricsHandler;
 import com.github.wxz.rpc.parallel.ExecutorManager;
 import com.github.wxz.rpc.netty.core.MsgChannelInitializer;
 import com.github.wxz.rpc.netty.handler.HandlerType;
@@ -109,7 +111,7 @@ public class MsgRevExecutor extends Thread implements ApplicationContextAware {
                     LOGGER.info("rpc server execute success!{},ip: {} port: {} protocol: {}execute-time: {} jmx-invoke-metrics: {}",
                             host, port,
                             serializeProtocol,
-                            "",//ModuleMetricsHandler.getStartTime(),
+                            ModuleMetricsHandler.getStartTime(),
                             (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT ? "open" : "close"));
                     future.channel().closeFuture().sync();
                 }
@@ -126,7 +128,7 @@ public class MsgRevExecutor extends Thread implements ApplicationContextAware {
     private void register() {
         //TODO
         //handlerMap.put(RpcSystemConfig.RPC_COMPILER_SPI_ATTR, new AccessAdaptiveProvider());
-        //handlerMap.put(RpcSystemConfig.RPC_ABILITY_DETAIL_SPI_ATTR, new AbilityDetailProvider());
+        handlerMap.put(RpcSystemConfig.RPC_ABILITY_DETAIL_SPI_ATTR, new AbilityDetailProvider());
     }
 
     @Override

@@ -15,7 +15,7 @@ public class Call {
     public static void main(String[] args) {
         ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("classpath:rpc-invoke-config-client.xml");
         AddCalculate addCalculate = (AddCalculate) context.getBean("addCalculate");
-        int result = addCalculate.add(1, 2);
+        int result = addCalculate.add(5755757, 1000000);
         LOGGER.info("result {}", result);
         context.destroy();
     }

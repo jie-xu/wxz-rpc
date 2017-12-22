@@ -33,7 +33,7 @@ public class RpcSystemConfig {
 
     public static final String RPC_COMPILER_SPI_ATTR = "com.wxz.rpc.compiler.AccessAdaptive";
 
-    public static final String RPC_ABILITY_DETAIL_SPI_ATTR = "com.wxz.rpc.core.AbilityDetail";
+    public static final String RPC_ABILITY_DETAIL_SPI_ATTR = "com.github.wxz.rpc.ability.AbilityDetail";
 
     public static final String FILTER_RESPONSE_MSG = "illegal request,rpc server refused to respond!";
 
@@ -50,6 +50,15 @@ public class RpcSystemConfig {
     private static final int SYSTEM_PROPERTY_JMX_INVOKE_METRICS = Integer.getInteger("rpc.jmx.invoke.metrics", 1);
 
     public static final boolean SYSTEM_PROPERTY_JMX_METRICS_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0;
+    /**
+     * module_metrics_jmx_port  RMIService监听的端口
+     */
+    public final static int MODULE_METRICS_JMX_PORT = 1098;
+
+    /**
+     * MBEAN_NAME
+     */
+    public final static String MBEAN_NAME = "com.github.wxz.rpc:type=ModuleMetricsHandler";
 
     private static boolean monitorServerSupport = false;
 

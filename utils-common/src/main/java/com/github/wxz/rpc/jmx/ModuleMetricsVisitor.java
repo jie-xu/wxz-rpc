@@ -2,14 +2,14 @@ package com.github.wxz.rpc.jmx;
 
 import com.alibaba.druid.util.Histogram;
 import com.github.wxz.rpc.config.RpcSystemConfig;
+import com.github.wxz.rpc.utils.DateUtils;
 
 import javax.management.JMException;
 import javax.management.openmbean.*;
 import java.beans.ConstructorProperties;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -20,10 +20,19 @@ import java.util.concurrent.atomic.AtomicLongFieldUpdater;
  * @date 2017/12/22 -21:11
  */
 public class ModuleMetricsVisitor {
-    public static final long DEFAULT_INVOKE_MIN_TIMESPAN = 3600 * 1000L;
+    public static final long DEFAULT_INVOKE_MIN_TIMESTAMP = 3600 * 1000L;
+    /**
+     * 名称
+     */
     private static final String[] THROWABLE_NAMES = {"message", "class", "stackTrace"};
+    /**
+     * 描述信息
+     */
     private static final String[] THROWABLE_DESCRIPTIONS = {"message", "class", "stackTrace"};
     private static final OpenType<?>[] THROWABLE_TYPES = new OpenType<?>[]{SimpleType.STRING, SimpleType.STRING, SimpleType.STRING};
+    /**
+     * 复合类型
+     */
     private static CompositeType THROWABLE_COMPOSITE_TYPE = null;
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeCount");
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeSuccessCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeSuccessCount");
@@ -36,7 +45,7 @@ public class ModuleMetricsVisitor {
     private volatile long invokeFailCount = 0L;
     private volatile long invokeFilterCount = 0L;
     private long invokeTimeStamp = 0L;
-    private long invokeMinTimeStamp = DEFAULT_INVOKE_MIN_TIMESPAN;
+    private long invokeMinTimeStamp = DEFAULT_INVOKE_MIN_TIMESTAMP;
     private long invokeMaxTimeStamp = 0L;
     private long[] invokeHistogram;
     private Exception lastStackTrace;
@@ -55,7 +64,7 @@ public class ModuleMetricsVisitor {
     public void clear() {
         lastStackTraceDetail = "";
         invokeTimeStamp = 0L;
-        invokeMinTimeStamp = DEFAULT_INVOKE_MIN_TIMESPAN;
+        invokeMinTimeStamp = DEFAULT_INVOKE_MIN_TIMESTAMP;
         invokeMaxTimeStamp = 0L;
         lastErrorTime = 0L;
         lastStackTrace = null;
@@ -84,8 +93,7 @@ public class ModuleMetricsVisitor {
         if (lastErrorTime <= 0) {
             return null;
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return format.format(new Date(lastErrorTime));
+        return DateUtils.localDateTimeToString(LocalDateTime.now());
     }
 
     public String getLastStackTrace() {

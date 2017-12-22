@@ -1,5 +1,6 @@
 package com.github.wxz.rpc.netty.core.invoke;
 
+import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.invoke.MsgRevInitTaskAdapter;
 import com.github.wxz.rpc.netty.model.MsgRequest;
 import com.github.wxz.rpc.netty.model.MsgResponse;
@@ -16,6 +17,10 @@ public class RevInitTaskFacade {
     private MsgResponse msgResponse;
     private Map<String, Object> handlerMap;
 
+    private boolean isMetrics = RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT;
+    private boolean jmxMetricsHash = RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT;
+
+
     public RevInitTaskFacade(MsgRequest msgRequest, MsgResponse msgResponse, Map<String, Object> handlerMap) {
         this.msgRequest = msgRequest;
         this.msgResponse = msgResponse;
@@ -23,7 +28,11 @@ public class RevInitTaskFacade {
     }
 
     public Callable<Boolean> getTask() {
-        return new MsgRevInitTaskAdapter(msgRequest, msgResponse, handlerMap);
+        return isMetrics ? getMetricsTask():new MsgRevInitTaskAdapter(msgRequest, msgResponse, handlerMap);
     }
 
+
+    private Callable<Boolean> getMetricsTask() {
+        return jmxMetricsHash ? new HashMsgRevInitializeTask(msgRequest, msgResponse, handlerMap) : new MsgRevInitializeTask(msgRequest, msgResponse, handlerMap);
+    }
 }

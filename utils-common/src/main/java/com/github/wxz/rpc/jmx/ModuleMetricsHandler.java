@@ -2,7 +2,7 @@ package com.github.wxz.rpc.jmx;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
-import com.github.wxz.rpc.parallel.AbstractDaemonThread;
+import com.github.wxz.rpc.parallel.ExecutorManager;
 import com.github.wxz.rpc.parallel.semaphore.SemaphoreWrapper;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.iterators.FilterIterator;
@@ -10,29 +10,27 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.management.*;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerConnection;
+import javax.management.ObjectName;
 import javax.management.remote.*;
-import java.io.IOException;
 import java.lang.management.ManagementFactory;
-import java.net.MalformedURLException;
-import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.ThreadPoolExecutor;
 
 
 /**
  * @author xianzhi.wang
- * @date 2017/12/22 -21:11
+ * @date 2017/12/21 -21:11
  */
-public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
+public class ModuleMetricsHandler extends AbstractModuleMetricsHandler implements Runnable {
+
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleMetricsHandler.class);
-    public final static String MBEAN_NAME = "com.github.wxz.rpc:type=ModuleMetricsHandler";
-    public final static int MODULE_METRICS_JMX_PORT = 1098;
-    private static final ModuleMetricsHandler INSTANCE = new ModuleMetricsHandler();
+    private static volatile ModuleMetricsHandler moduleMetricsHandler = null;
     private String moduleMetricsJmxUrl = "";
     private Semaphore semaphore = new Semaphore(0);
     private SemaphoreWrapper semaphoreWrapper = new SemaphoreWrapper(semaphore);
@@ -43,11 +41,20 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
     private ModuleMetricsListener listener = new ModuleMetricsListener();
 
     private ModuleMetricsHandler() {
-        super();
     }
 
+    /**
+     * 单例
+     *
+     * @return
+     */
     public static ModuleMetricsHandler getInstance() {
-        return INSTANCE;
+        if (moduleMetricsHandler == null) {
+            synchronized (ModuleMetricsHandler.class) {
+                moduleMetricsHandler = new ModuleMetricsHandler();
+            }
+        }
+        return moduleMetricsHandler;
     }
 
     @Override
@@ -60,7 +67,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
         final String method = methodName.trim();
         final String module = moduleName.trim();
 
-        //FIXME: 2017/10/13
+        //FIXME:
         //JMX度量临界区要注意线程间的并发竞争,否则会统计数据失真
         Iterator iterator = new FilterIterator(visitorList.iterator(), new Predicate() {
             @Override
@@ -86,75 +93,51 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
         }
     }
 
-    public void start() {
-        new AbstractDaemonThread() {
-            @Override
-            public String getDaemonThreadName() {
-                return ModuleMetricsHandler.class.getSimpleName();
-            }
+    @Override
+    public void run() {
+        //利用ManagementFactory获取jvm,os,线程，死锁等一系列信息
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        try {
+            latch.await();
+            //在RMIServer上 创建本地主机上的“远程对象注册表”
+            LocateRegistry.createRegistry(RpcSystemConfig.MODULE_METRICS_JMX_PORT);
+            MsgRevExecutor msgRevExecutor = MsgRevExecutor.getInstance();
+            String ipAddress = StringUtils.isNotEmpty(
+                    msgRevExecutor.getServerAddress()) ?
+                    StringUtils.substringBeforeLast(
+                            msgRevExecutor.getServerAddress(), RpcSystemConfig.DELIMITER) : "localhost";
+            moduleMetricsJmxUrl = "service:jmx:rmi:///jndi/rmi://" + ipAddress + ":" + RpcSystemConfig.MODULE_METRICS_JMX_PORT + "/rpcServer";
+            JMXServiceURL url = new JMXServiceURL(moduleMetricsJmxUrl);
+            JMXConnectorServer jmxConnectorServer =
+                    JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
+            //标准MBean名称必需是在要监控的类名后面加上“MBean”, 且要监控的类和MBean接口必需在同一包下
+            ObjectName name = new ObjectName(RpcSystemConfig.MBEAN_NAME);
 
-            @Override
-            public void run() {
-                MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
-                try {
-                    latch.await();
-                    LocateRegistry.createRegistry(MODULE_METRICS_JMX_PORT);
-                    MsgRevExecutor ref = MsgRevExecutor.getInstance();
-                    String ipAddress = StringUtils.isNotEmpty(
-                            ref.getServerAddress()) ?
-                            StringUtils.substringBeforeLast(
-                                    ref.getServerAddress(), RpcSystemConfig.DELIMITER) : "localhost";
-                    moduleMetricsJmxUrl = "service:jmx:rmi:///jndi/rmi://" + ipAddress + ":" + MODULE_METRICS_JMX_PORT + "/rpcServer";
-                    JMXServiceURL url = new JMXServiceURL(moduleMetricsJmxUrl);
-                    JMXConnectorServer cs =
-                            JMXConnectorServerFactory.newJMXConnectorServer(url, null, mbs);
+            mbs.registerMBean(ModuleMetricsHandler.this, name);
+            mbs.addNotificationListener(name, listener, null, null);
+            jmxConnectorServer.start();
 
-                    ObjectName name = new ObjectName(MBEAN_NAME);
+            semaphoreWrapper.release();
 
-                    mbs.registerMBean(ModuleMetricsHandler.this, name);
-                    mbs.addNotificationListener(name, listener, null, null);
-                    cs.start();
-
-                    semaphoreWrapper.release();
-
-                    LOGGER.info("rpc JMX server is execute success! jmx-url: {}", moduleMetricsJmxUrl);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (MBeanRegistrationException e) {
-                    e.printStackTrace();
-                } catch (InstanceAlreadyExistsException e) {
-                    e.printStackTrace();
-                } catch (NotCompliantMBeanException e) {
-                    e.printStackTrace();
-                } catch (MalformedObjectNameException e) {
-                    e.printStackTrace();
-                } catch (InstanceNotFoundException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }.start();
+            LOGGER.info("rpc JMX server is execute success! jmx-url: {}", moduleMetricsJmxUrl);
+        } catch (Exception e) {
+            LOGGER.error("exception {}", e.getStackTrace());
+        }
     }
+
 
     public void stop() {
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         try {
-            ObjectName name = new ObjectName(MBEAN_NAME);
+            ObjectName name = new ObjectName(RpcSystemConfig.MBEAN_NAME);
             mbs.unregisterMBean(name);
-            ExecutorService executor = getExecutor();
-            executor.shutdown();
-            while (!executor.isTerminated()) {
-
+            ThreadPoolExecutor threadPoolExecutor = ExecutorManager.getJMXThreadPoolExecutor(METRICS_VISITOR_LIST_SIZE);
+            threadPoolExecutor.shutdown();
+            while (!threadPoolExecutor.isTerminated()) {
+                LOGGER.error("jmx threadPoolExecutor is not terminated");
             }
-        } catch (MalformedObjectNameException e) {
-            e.printStackTrace();
-        } catch (InstanceNotFoundException e) {
-            e.printStackTrace();
-        } catch (MBeanRegistrationException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.error("stop exception {}", e.getStackTrace());
         }
     }
 
@@ -163,14 +146,11 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler {
             if (!semaphoreWrapper.isRelease()) {
                 semaphoreWrapper.acquire();
             }
-
             JMXServiceURL url = new JMXServiceURL(moduleMetricsJmxUrl);
-            JMXConnector jmxc = JMXConnectorFactory.connect(url, null);
-            connection = jmxc.getMBeanServerConnection();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            JMXConnector jmxConnector = JMXConnectorFactory.connect(url, null);
+            connection = jmxConnector.getMBeanServerConnection();
+        } catch (Exception e) {
+            LOGGER.error("connect exception {}", e.getStackTrace());
         }
         return connection;
     }
