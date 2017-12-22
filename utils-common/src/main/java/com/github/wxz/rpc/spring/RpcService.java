@@ -40,7 +40,7 @@ public class RpcService implements ApplicationContextAware, ApplicationListener 
     @Override
     public void onApplicationEvent(ApplicationEvent applicationEvent) {
         //解决加载两次的问题
-        if (applicationEvent instanceof ContextRefreshedEvent) {
+        if (!(applicationEvent instanceof ContextRefreshedEvent)) {
             // 事件监听器：ApplicationListener接口，可由容器中任何监听器Bean担任。
             // onApplicationEvent(ApplicationEvent event)：每当容器内发生任何事件时，此方法都被触发
             ServiceFilterBinder binder = new ServiceFilterBinder();

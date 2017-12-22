@@ -25,7 +25,7 @@ public class ApiEchoInitializer extends ChannelInitializer<SocketChannel> {
             p.addLast(sslCtx.newHandler(ch.alloc()));
         }
         p.addLast(new HttpServerCodec());
-        //p.addLast(new ApiEchoHandler());
+        p.addLast(new ApiEchoHandler());
     }
 }
 

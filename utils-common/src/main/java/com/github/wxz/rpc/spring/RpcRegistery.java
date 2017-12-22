@@ -1,6 +1,8 @@
 package com.github.wxz.rpc.spring;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
+import com.github.wxz.rpc.jmx.HashModuleMetricsVisitor;
+import com.github.wxz.rpc.jmx.ModuleMetricsHandler;
 import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
 import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
 import org.springframework.beans.factory.DisposableBean;
@@ -34,6 +36,14 @@ public class RpcRegistery implements InitializingBean, DisposableBean {
             //TODO
         }
         msgRevExecutor.start();
+
+        //支持JMS
+        if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {
+            HashModuleMetricsVisitor visitor = HashModuleMetricsVisitor.getInstance();
+            visitor.signal();
+            ModuleMetricsHandler handler = ModuleMetricsHandler.getInstance();
+            handler.start();
+        }
     }
 
     public String getIpAddress() {
