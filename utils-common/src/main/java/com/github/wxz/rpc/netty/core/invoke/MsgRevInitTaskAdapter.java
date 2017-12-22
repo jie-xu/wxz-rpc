@@ -25,31 +25,26 @@ public class MsgRevInitTaskAdapter extends AbstractMsgRevInitTask {
 
     @Override
     protected void injectSuccessInvoke(long invokeTimeStamp) {
-        LOGGER.info("injectSuccessInvoke............");
-
+        LOGGER.info("injectSuccessInvoke............ {}", invokeTimeStamp);
     }
 
     @Override
     protected void injectFailInvoke(Throwable error) {
-        LOGGER.info("injectFailInvoke............");
-
+        LOGGER.info("injectFailInvoke............ {}", error);
     }
 
     @Override
     protected void injectFilterInvoke() {
         LOGGER.info("injectFilterInvoke............");
-
     }
 
     @Override
     protected void acquire() {
         LOGGER.info("acquire............");
-
     }
 
     @Override
     protected void release() {
         LOGGER.info("release............");
-
     }
 }

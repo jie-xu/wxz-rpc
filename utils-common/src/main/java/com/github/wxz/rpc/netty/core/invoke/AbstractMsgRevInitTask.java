@@ -1,5 +1,6 @@
 package com.github.wxz.rpc.netty.core.invoke;
 
+import com.alibaba.fastjson.JSON;
 import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.model.MsgRequest;
 import com.github.wxz.rpc.netty.model.MsgResponse;
@@ -61,7 +62,7 @@ public abstract class AbstractMsgRevInitTask implements Callable<Boolean> {
             }
             return Boolean.TRUE;
         } catch (Throwable t) {
-            msgResponse.setError(getStackTrace(t));
+            msgResponse.setError(JSON.toJSONString(t.getStackTrace()));
             LOGGER.error("RPC Server invoke error!", t);
             injectFailInvoke(t);
             return Boolean.FALSE;
@@ -71,6 +72,11 @@ public abstract class AbstractMsgRevInitTask implements Callable<Boolean> {
 
     }
 
+    /**
+     * reflect
+     * @param msgRequest
+     * @return
+     */
     private Object reflect(MsgRequest msgRequest) {
         ProxyFactory proxyFactory = new ProxyFactory(new MethodInvoker());
         NameMatchMethodPointcutAdvisor advisor = new NameMatchMethodPointcutAdvisor();
@@ -82,12 +88,6 @@ public abstract class AbstractMsgRevInitTask implements Callable<Boolean> {
         invokeTimeStamp = methodInvoker.getInvokeTimeStamp();
         setNotNull(((MethodProxyAdvisor) advisor.getAdvice()).isNotNull());
         return object;
-    }
-
-    public String getStackTrace(Throwable ex) {
-        StringWriter buf = new StringWriter();
-        ex.printStackTrace(new PrintWriter(buf));
-        return buf.toString();
     }
 
     /**

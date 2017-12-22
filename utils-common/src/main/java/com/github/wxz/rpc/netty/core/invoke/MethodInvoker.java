@@ -30,9 +30,9 @@ public class MethodInvoker {
     public Object invoke(MsgRequest msgRequest) {
         String methodName = msgRequest.getMethodName();
         Object[] parametersVal = msgRequest.getParametersVal();
+        Object result = null;
         stopWatch.reset();
         stopWatch.start();
-        Object result = null;
         try {
             result = MethodUtils.invokeMethod(serviceBean, methodName, parametersVal);
         } catch (NoSuchMethodException e) {
@@ -42,6 +42,7 @@ public class MethodInvoker {
         } catch (InvocationTargetException e) {
             LOGGER.error("InvocationTargetException", e);
         }
+        stopWatch.stop();
         return result;
 
     }
