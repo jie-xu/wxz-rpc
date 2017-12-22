@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableMap;
 import java.io.Serializable;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author xianzhi.wang
@@ -35,41 +37,47 @@ public class ReflectionUtils {
 
     private StringBuilder provider = new StringBuilder();
 
+    /**
+     * filterInterfaces
+     *
+     * @param proxyClasses
+     * @return
+     */
     public static Class<?>[] filterInterfaces(Class<?>[] proxyClasses) {
-        Set<Class<?>> interfaces = new HashSet<Class<?>>();
-        for (Class<?> proxyClass : proxyClasses) {
-            if (proxyClass.isInterface()) {
-                interfaces.add(proxyClass);
-            }
-        }
-
+        Set<Class<?>> interfaces = new HashSet<>();
+        Stream<Class<?>> classStream = Arrays.stream(proxyClasses);
+        classStream.filter(aClass -> aClass.isInterface()).forEach(aClass ->
+                interfaces.add(aClass)
+        );
         interfaces.add(Serializable.class);
         return interfaces.toArray(new Class[interfaces.size()]);
     }
 
+    /**
+     * filterNonInterfaces
+     *
+     * @param proxyClasses
+     * @return
+     */
     public static Class<?>[] filterNonInterfaces(Class<?>[] proxyClasses) {
-        Set<Class<?>> superclasses = new HashSet<Class<?>>();
-        for (Class<?> proxyClass : proxyClasses) {
-            if (!proxyClass.isInterface()) {
-                superclasses.add(proxyClass);
-            }
-        }
-
+        Set<Class<?>> superclasses = new HashSet<>();
+        Stream<Class<?>> classStream = Arrays.stream(proxyClasses);
+        classStream.filter(aClass -> !aClass.isInterface()).forEach(aClass ->
+                superclasses.add(aClass)
+        );
         return superclasses.toArray(new Class[superclasses.size()]);
     }
 
     public static boolean existDefaultConstructor(Class<?> superclass) {
-        final Constructor<?>[] declaredConstructors = superclass.getDeclaredConstructors();
-        for (int i = 0; i < declaredConstructors.length; i++) {
-            Constructor<?> constructor = declaredConstructors[i];
-            boolean exist = (constructor.getParameterTypes().length == 0 &&
-                    (Modifier.isPublic(constructor.getModifiers()) || Modifier.isProtected(constructor.getModifiers())));
-            if (exist) {
-                return true;
-            }
+        Stream<Constructor<?>> stream = Arrays.stream(superclass.getDeclaredConstructors());
+        List<Constructor<?>> list = stream.filter(constructor -> constructor.getParameterTypes().length == 0)
+                .filter(constructor ->
+                        (Modifier.isPublic(constructor.getModifiers())
+                                || Modifier.isProtected(constructor.getModifiers()))).collect(Collectors.toList());
+        if (org.springframework.util.CollectionUtils.isEmpty(list)) {
+            return false;
         }
-
-        return false;
+        return true;
     }
 
     public static Class<?> getParentClass(Class<?>[] proxyClasses) {
@@ -182,7 +190,10 @@ public class ReflectionUtils {
         return method;
     }
 
-    public static Method findDeclaredMethod(final Class<?> cls, final String methodName, final Class<?>... parameterTypes) {
+    public static Method findDeclaredMethod(
+            final Class<?> cls,
+            final String methodName,
+            final Class<?>... parameterTypes) {
         Method method = null;
         try {
             method = cls.getDeclaredMethod(methodName, parameterTypes);
