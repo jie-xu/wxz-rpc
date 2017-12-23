@@ -59,6 +59,11 @@ public class ApiEchoHandler extends ChannelInboundHandlerAdapter {
         ctx.close();
     }
 
+    /**
+     * 返回
+     * @param req
+     * @return
+     */
     private byte[] buildResponseMsg(HttpRequest req) {
         byte[] content = null;
         boolean metrics = (req.uri().indexOf(METRICS) != -1);

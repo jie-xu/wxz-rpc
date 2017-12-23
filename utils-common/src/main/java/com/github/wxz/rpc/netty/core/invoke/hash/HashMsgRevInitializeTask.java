@@ -1,5 +1,6 @@
-package com.github.wxz.rpc.netty.core.invoke;
+package com.github.wxz.rpc.netty.core.invoke.hash;
 
+import com.github.wxz.rpc.netty.core.invoke.AbstractMsgRevInitTask;
 import com.github.wxz.rpc.netty.model.MsgRequest;
 import com.github.wxz.rpc.netty.model.MsgResponse;
 import org.slf4j.Logger;

@@ -50,10 +50,11 @@ public class ApiEchoResolver implements Runnable {
             bootStrap.childHandler(new ApiEchoInitializer(sslCtx));
             Channel ch = bootStrap.bind(port).sync().channel();
             LOGGER.info("You can open your web browser see rpc server api interface: " +
-                    (SSL ? "https" : "http") + "://" + host + ":" + port + "/rpc.html");
+                    (SSL ? "https" : "http") + "://" + host + ":" + port + "/rpc");
+            LOGGER.info("You can open your web browser see rpc server metrics http://"+host+":"+port+"/rpc/metrics");
             ch.closeFuture().sync();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.error("exception  {}",e);
         } finally {
             bossGroup.shutdownGracefully();
             workerGroup.shutdownGracefully();

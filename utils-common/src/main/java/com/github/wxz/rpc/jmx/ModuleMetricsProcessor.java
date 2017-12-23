@@ -1,4 +1,5 @@
 package com.github.wxz.rpc.jmx;
+
 import com.github.wxz.rpc.config.RpcSystemConfig;
 
 import javax.management.*;
@@ -8,11 +9,12 @@ import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * ModuleMetricsProcessor
+ *
  * @author xianzhi.wang
  * @date 2017/12/22 -21:11
  */
 public class ModuleMetricsProcessor {
-    private static final ModuleMetricsProcessor INSTANCE = new ModuleMetricsProcessor();
     private final static String TD_BEGIN = "<td>";
     private final static String TD_END = "</td>";
     private final static String TR_BEGIN = "<tr>";
@@ -23,27 +25,44 @@ public class ModuleMetricsProcessor {
     private final static String SUB_TABLE_BEGIN = "<table border=\"1\">";
     private final static String SUB_TABLE_END = "</table>";
     private final static String JMX_METRICS_ATTR = "ModuleMetricsVisitor";
-    private MBeanServerConnection connection;
+
+    private static volatile ModuleMetricsProcessor moduleMetricsProcessor = null;
+
+    private MBeanServerConnection mBeanServerConnection;
 
     private ModuleMetricsProcessor() {
         init();
     }
 
+    /**
+     * instance
+     * @return
+     */
     public static ModuleMetricsProcessor getInstance() {
-        return INSTANCE;
+        if (moduleMetricsProcessor == null) {
+            synchronized (ModuleMetricsProcessor.class) {
+                if (moduleMetricsProcessor == null) {
+                    moduleMetricsProcessor = new ModuleMetricsProcessor();
+                }
+            }
+        }
+        return moduleMetricsProcessor;
     }
 
+    /**
+     * 获取连接
+     */
     private void init() {
         ModuleMetricsHandler handler = ModuleMetricsHandler.getInstance();
-        connection = handler.connect();
+        mBeanServerConnection = handler.connect();
 
         while (true) {
-            if (connection != null) {
+            if (mBeanServerConnection != null) {
                 break;
             } else {
                 try {
                     TimeUnit.SECONDS.sleep(1L);
-                    connection = handler.connect();
+                    mBeanServerConnection = handler.connect();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -78,7 +97,7 @@ public class ModuleMetricsProcessor {
         }
 
         try {
-            Object obj = connection.getAttribute(name, JMX_METRICS_ATTR);
+            Object obj = mBeanServerConnection.getAttribute(name, JMX_METRICS_ATTR);
             if (obj instanceof CompositeData[]) {
                 for (CompositeData compositeData : (CompositeData[]) obj) {
                     CompositeData data = (CompositeData) compositeData;
@@ -89,7 +108,7 @@ public class ModuleMetricsProcessor {
                     long invokeFailCount = (Long) (data.get("invokeFailCount"));
                     long invokeFilterCount = (Long) (data.get("invokeFilterCount"));
                     long invokeTimeStamp = (Long) (data.get("invokeTimeStamp"));
-                    long invokeMinTimeStamp = ((Long) (data.get("invokeMinTimeStamp"))).equals(Long.valueOf(ModuleMetricsVisitor.DEFAULT_INVOKE_MIN_TIMESTAMP)) ? Long.valueOf(0L) : (Long) (data.get("invokeMinTimespan"));
+                    long invokeMinTimeStamp = ((Long) (data.get("invokeMinTimeStamp"))).equals(Long.valueOf(ModuleMetricsVisitor.DEFAULT_INVOKE_MIN_TIMESTAMP)) ? Long.valueOf(0L) : (Long) (data.get("invokeMinTimeStamp"));
                     long invokeMaxTimeStamp = (Long) (data.get("invokeMaxTimeStamp"));
                     String lastStackTraceDetail = (String) (data.get("lastStackTraceDetail"));
                     String lastErrorTime = (String) (data.get("lastErrorTime"));
