@@ -1,6 +1,7 @@
 package com.github.wxz.rpc.netty.core;
 
 import com.github.wxz.rpc.netty.handler.HandlerType;
+import com.github.wxz.rpc.netty.handler.RpcSerializeFrameImpl;
 import com.github.wxz.rpc.netty.serialize.RpcSerializeProtocol;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

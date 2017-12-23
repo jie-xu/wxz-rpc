@@ -1,4 +1,4 @@
-package com.github.wxz.rpc.netty.core;
+package com.github.wxz.rpc.netty.handler;
 
 import com.github.wxz.rpc.netty.handler.*;
 import com.github.wxz.rpc.netty.serialize.RpcSerializeFrame;
