@@ -34,6 +34,12 @@ public abstract class AbstractInvokeEventBus {
         this.methodName = methodName;
     }
 
+    /**
+     * buildNotification
+     * @param oldValue
+     * @param newValue
+     * @return
+     */
     public abstract Notification buildNotification(Object oldValue, Object newValue);
 
     public void notify(Object oldValue, Object newValue) {

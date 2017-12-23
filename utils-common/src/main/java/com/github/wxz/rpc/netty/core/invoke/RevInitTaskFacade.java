@@ -27,11 +27,18 @@ public class RevInitTaskFacade {
         this.handlerMap = handlerMap;
     }
 
+    /**
+     * isMetrics ?
+     * @return
+     */
     public Callable<Boolean> getTask() {
         return isMetrics ? getMetricsTask():new MsgRevInitTaskAdapter(msgRequest, msgResponse, handlerMap);
     }
 
-
+    /**
+     * hash or not
+     * @return
+     */
     private Callable<Boolean> getMetricsTask() {
         return jmxMetricsHash ? new HashMsgRevInitializeTask(msgRequest, msgResponse, handlerMap) : new MsgRevInitializeTask(msgRequest, msgResponse, handlerMap);
     }

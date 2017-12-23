@@ -41,7 +41,7 @@ public abstract class AbstractMsgRevInitTask implements Callable<Boolean> {
     @Override
     public Boolean call() {
         try {
-            //获取资源
+            //获取许可
             acquire();
             msgResponse.setMessageId(msgRequest.getMessageId());
             //invoke

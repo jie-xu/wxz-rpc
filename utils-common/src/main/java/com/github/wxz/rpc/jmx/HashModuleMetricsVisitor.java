@@ -50,6 +50,9 @@ public class HashModuleMetricsVisitor {
         return hashVisitorList.size();
     }
 
+    /**
+     * 初始化JMX数据
+     */
     private void init() {
         Map<String, Object> map = MsgRevExecutor.getInstance().getHandlerMap();
         ReflectionUtils utils = new ReflectionUtils();

@@ -84,6 +84,7 @@ public class MsgRevHandler extends ChannelInboundHandlerAdapter {
         MsgResponse msgResponse = new MsgResponse();
 
         RevInitTaskFacade facade = new RevInitTaskFacade(msgRequest, msgResponse, handlerMap);
+        //获取具体task
         Callable<Boolean> revTask = facade.getTask();
         //代理对象执行任务
         submit(revTask, ctx, msgRequest, msgResponse);

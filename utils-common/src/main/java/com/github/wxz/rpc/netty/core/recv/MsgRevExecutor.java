@@ -108,7 +108,7 @@ public class MsgRevExecutor extends Thread implements ApplicationContextAware {
                 if (HTTP_FLAG) {
                     //开启新的线程,apiEcho
                     ExecutorManager.execute(new ApiEchoResolver(host, echoApiPort));
-                    LOGGER.info("rpc server execute success!{},ip: {} port: {} protocol: {}execute-time: {} jmx-invoke-metrics: {}",
+                    LOGGER.info("rpc server execute success,ip: {} port: {} protocol: {}execute-time: {} jmx-invoke-metrics: {}",
                             host, port,
                             serializeProtocol,
                             ModuleMetricsHandler.getStartTime(),

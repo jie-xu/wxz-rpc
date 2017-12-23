@@ -156,6 +156,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler implement
         try {
             ObjectName name = new ObjectName(RpcSystemConfig.MBEAN_NAME);
             mbs.unregisterMBean(name);
+            //TODO 线程池未正确关闭
             ThreadPoolExecutor threadPoolExecutor = ExecutorManager.getJMXThreadPoolExecutor(METRICS_VISITOR_LIST_SIZE);
             threadPoolExecutor.shutdown();
             while (!threadPoolExecutor.isTerminated()) {
