@@ -4,6 +4,8 @@ import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
 import com.github.wxz.rpc.utils.ReflectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @date 2017/12/22 -21:11
  */
 public class HashModuleMetricsVisitor {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(HashModuleMetricsVisitor.class);
     private static volatile HashModuleMetricsVisitor hashModuleMetricsVisitor = null;
 
     private List<List<ModuleMetricsVisitor>> hashVisitorList = new ArrayList<>();
@@ -72,11 +74,14 @@ public class HashModuleMetricsVisitor {
                             hashVisitorList.add(visitorList);
                         });
                     } catch (ClassNotFoundException e) {
-                        e.printStackTrace();
+                        LOGGER.error("class not found {}", e);
                     }
                 });
     }
 
+    /**
+     * 将count值减1
+     */
     public void signal() {
         ModuleMetricsHandler.getInstance().getLatch().countDown();
     }

@@ -24,6 +24,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 
 
 /**
+ * ModuleMetricsHandler处理类
+ *
  * @author xianzhi.wang
  * @date 2017/12/21 -21:11
  */
@@ -32,10 +34,30 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler implement
     private static final Logger LOGGER = LoggerFactory.getLogger(ModuleMetricsHandler.class);
     private static volatile ModuleMetricsHandler moduleMetricsHandler = null;
     private String moduleMetricsJmxUrl = "";
+    /**
+     * 笔记：TODO
+     * Semaphore 信号量，
+     * Semaphore可以控同时访问的线程个数，
+     * 通过 acquire() 获取一个许可，如果没有就等待，
+     * 而 release() 释放一个许可
+     */
+    /**
+     * 参数 0 表示许可数目，即同时可以允许0个线程进行访问
+     */
     private Semaphore semaphore = new Semaphore(0);
+
     private SemaphoreWrapper semaphoreWrapper = new SemaphoreWrapper(semaphore);
+
     private MBeanServerConnection connection;
 
+    /**
+     * TODO
+     * 笔记：CyclicBarrier 通过它可以实现让一组线程等待至某个状态之后再全部同时执行
+     */
+
+    /**
+     * CountDownLatch 能够使一个线程等待其他线程完成各自的工作后再执行
+     */
     private CountDownLatch latch = new CountDownLatch(1);
 
     private ModuleMetricsListener listener = new ModuleMetricsListener();
@@ -98,9 +120,12 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler implement
         //利用ManagementFactory获取jvm,os,线程，死锁等一系列信息
         MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
         try {
+            //等待初始化完成
             latch.await();
+
             //在RMIServer上 创建本地主机上的“远程对象注册表”
             LocateRegistry.createRegistry(RpcSystemConfig.MODULE_METRICS_JMX_PORT);
+
             MsgRevExecutor msgRevExecutor = MsgRevExecutor.getInstance();
             String ipAddress = StringUtils.isNotEmpty(
                     msgRevExecutor.getServerAddress()) ?

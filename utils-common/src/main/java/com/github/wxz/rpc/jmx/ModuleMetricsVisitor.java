@@ -16,6 +16,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLongFieldUpdater;
 
 /**
+ * ModuleMetricsVisitor
+ *
  * @author xianzhi.wang
  * @date 2017/12/22 -21:11
  */
@@ -38,7 +40,13 @@ public class ModuleMetricsVisitor {
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeSuccessCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeSuccessCount");
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeFailCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeFailCount");
     private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeFilterCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeFilterCount");
+    /**
+     * class 名称
+     */
     private String moduleName;
+    /**
+     * 方法名称
+     */
     private String methodName;
     private volatile long invokeCount = 0L;
     private volatile long invokeSuccessCount = 0L;
@@ -284,8 +292,7 @@ public class ModuleMetricsVisitor {
 
     @Override
     public String toString() {
-        String metrics = String.format("<<[moduleName:%s]-[methodName:%s]>> [invokeCount:%d][invokeSuccessCount:%d][invokeFilterCount:%d][invokeTimeStamp:%d][invokeMinTimeStamp:%d][invokeMaxTimeStamp:%d][invokeFailCount:%d][lastErrorTime:%d][lastStackTraceDetail:%s]\n", moduleName, methodName, invokeCount, invokeSuccessCount, invokeFilterCount, invokeTimeStamp, invokeMinTimeStamp, invokeMaxTimeStamp, invokeFailCount, lastErrorTime, lastStackTraceDetail);
-        return metrics;
+        return String.format("<<[moduleName:%s]-[methodName:%s]>> [invokeCount:%d][invokeSuccessCount:%d][invokeFilterCount:%d][invokeTimeStamp:%d][invokeMinTimeStamp:%d][invokeMaxTimeStamp:%d][invokeFailCount:%d][lastErrorTime:%d][lastStackTraceDetail:%s]", moduleName, methodName, invokeCount, invokeSuccessCount, invokeFilterCount, invokeTimeStamp, invokeMinTimeStamp, invokeMaxTimeStamp, invokeFailCount, lastErrorTime, lastStackTraceDetail);
     }
 }
 
