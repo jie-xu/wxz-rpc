@@ -1,7 +1,6 @@
 package com.github.wxz.rpc.filter.support;
 
 import com.github.wxz.rpc.filter.Filter;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +15,13 @@ public class SimpleFilter implements Filter {
 
     @Override
     public boolean before(Method method, Object processor, Object[] requestObjects) {
-        LOGGER.info(StringUtils.center("[SimpleFilter##before]", 48, "*"));
+        LOGGER.info("----SimpleFilter before----");
         return true;
     }
 
     @Override
     public void after(Method method, Object processor, Object[] requestObjects) {
-        LOGGER.info(StringUtils.center("[SimpleFilter##after]", 48, "*"));
+        LOGGER.info("----SimpleFilter after----");
     }
 }
 
