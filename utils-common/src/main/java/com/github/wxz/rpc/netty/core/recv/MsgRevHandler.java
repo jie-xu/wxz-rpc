@@ -8,8 +8,6 @@ import com.github.wxz.rpc.parallel.ExecutorManager;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import org.slf4j.Logger;
@@ -61,12 +59,9 @@ public class MsgRevHandler extends ChannelInboundHandlerAdapter {
             @Override
             public void onSuccess(Boolean result) {
                 channelHandlerContext.writeAndFlush(response)
-                        .addListener(new ChannelFutureListener() {
-                            @Override
-                            public void operationComplete(ChannelFuture channelFuture) throws Exception {
-                                LOGGER.info("rpc server send message-id response:" + request.getMessageId());
-                            }
-                        });
+                        .addListener(channel ->
+                                LOGGER.info("  rpc server send message-id response:" + request.getMessageId())
+                        );
             }
 
             @Override

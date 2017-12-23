@@ -313,6 +313,12 @@ public class ReflectionUtils {
         return type.toString();
     }
 
+    /**
+     * 反射 生成string
+     *
+     * @param cls
+     * @return
+     */
     public List<String> getClassMethodSignature(Class<?> cls) {
         if (!cls.isInterface()) {
             return Collections.EMPTY_LIST;

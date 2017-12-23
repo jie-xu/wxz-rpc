@@ -53,6 +53,8 @@ public class RpcService implements ApplicationContextAware, ApplicationListener 
             MsgRevExecutor msgRevExecutor = MsgRevExecutor.getInstance();
             msgRevExecutor.getHandlerMap().putIfAbsent(interfaceName, binder);
             LOGGER.info("put interfaceName {}   into msgRevExecutor handlerMap ", interfaceName);
+        } else {
+            LOGGER.info("ContextRefreshedEvent ignore....");
         }
     }
 

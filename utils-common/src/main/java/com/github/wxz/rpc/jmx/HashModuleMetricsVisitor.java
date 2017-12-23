@@ -56,15 +56,16 @@ public class HashModuleMetricsVisitor {
         }
 
         map.keySet().stream()
-                .filter(key -> StringUtils.isNotEmpty(key))
-                .filter(key -> map.get(key) != null)
-                .forEach(key -> {
+                //去除掉无效数据
+                .filter(clazz -> StringUtils.isNotEmpty(clazz))
+                .filter(clazz -> map.get(clazz) != null)
+                .forEach(clazz -> {
                     try {
-                        final List<String> list = utils.getClassMethodSignature(Class.forName(key));
+                        final List<String> list = utils.getClassMethodSignature(Class.forName(clazz));
                         list.stream().forEach(signature -> {
                             List<ModuleMetricsVisitor> visitorList = new ArrayList<>();
                             for (int i = 0; i < RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_NUMS; i++) {
-                                ModuleMetricsVisitor visitor = new ModuleMetricsVisitor(key, signature);
+                                ModuleMetricsVisitor visitor = new ModuleMetricsVisitor(clazz, signature);
                                 visitor.setHashKey(i);
                                 visitorList.add(visitor);
                             }

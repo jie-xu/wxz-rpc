@@ -13,7 +13,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 public enum RpcSerializeProtocol {
 
     JDK_SERIALIZE("jdk_native"),
-    KRYO_SERIALIZE("kryo"),
+    KR_YO_SERIALIZE("kryo"),
     HESSIAN_SERIALIZE("hessian"),
     PROTO_STUFF_SERIALIZE("proto_stuff");
 

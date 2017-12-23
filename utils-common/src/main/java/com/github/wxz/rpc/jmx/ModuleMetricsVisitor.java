@@ -61,6 +61,9 @@ public class ModuleMetricsVisitor {
         clear();
     }
 
+    /**
+     * 初始化
+     */
     public void clear() {
         lastStackTraceDetail = "";
         invokeTimeStamp = 0L;

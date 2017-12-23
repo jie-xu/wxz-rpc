@@ -26,12 +26,18 @@ import java.util.concurrent.locks.LockSupport;
  */
 public abstract class AbstractModuleMetricsHandler extends NotificationBroadcasterSupport implements ModuleMetricsVisitorMXBean {
     public static final int METRICS_VISITOR_LIST_SIZE = HashModuleMetricsVisitor.getInstance().getHashModuleMetricsVisitorListSize();
+
     protected static String startTime;
+
     private final AtomicBoolean locked = new AtomicBoolean(false);
     private final Queue<Thread> waiters = new ConcurrentLinkedQueue<>();
+
     protected List<ModuleMetricsVisitor> visitorList = new CopyOnWriteArrayList<>();
+
     private MetricsTask[] tasks = new MetricsTask[METRICS_VISITOR_LIST_SIZE];
+
     private boolean aggregationTaskFlag = false;
+
     private ThreadPoolExecutor threadPoolExecutor =
             ExecutorManager.getJMXThreadPoolExecutor(METRICS_VISITOR_LIST_SIZE);
 
@@ -90,7 +96,7 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
                 AttributeChangeNotification.ATTRIBUTE_CHANGE
         };
         String name = AttributeChangeNotification.class.getName();
-        String description = "the event send from NettyRPC server!";
+        String description = "the event send from rpc server!";
         MBeanNotificationInfo info =
                 new MBeanNotificationInfo(types, name, description);
         return new MBeanNotificationInfo[]{info};
@@ -113,6 +119,12 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
         LockSupport.unpark(waiters.peek());
     }
 
+    /**
+     * visitCriticalSection
+     * @param moduleName
+     * @param methodName
+     * @return
+     */
     protected abstract ModuleMetricsVisitor visitCriticalSection(String moduleName, String methodName);
 
 

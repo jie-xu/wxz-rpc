@@ -46,7 +46,7 @@ public class RpcSerializeFrameImpl implements RpcSerializeFrame {
                 }
                 break;
             }
-            case KRYO_SERIALIZE: {
+            case KR_YO_SERIALIZE: {
                 if (handlerType == HandlerType.REC) {
                     handler.getInstance(KryoHandler.class).recHandle(handlerMap, pipeline);
                 } else if (handlerType == HandlerType.SEND) {

@@ -10,7 +10,7 @@ import org.w3c.dom.Element;
  * @author xianzhi.wang
  * @date 2017/12/19 -16:06
  */
-public class RpcRegisteryParser implements BeanDefinitionParser {
+public class RpcRegistryParser implements BeanDefinitionParser {
     @Override
     public BeanDefinition parse(Element element, ParserContext parserContext) {
         String id = element.getAttribute("id");
@@ -19,7 +19,7 @@ public class RpcRegisteryParser implements BeanDefinitionParser {
         String protocolType = element.getAttribute("protocol");
 
         RootBeanDefinition beanDefinition = new RootBeanDefinition();
-        beanDefinition.setBeanClass(RpcRegistery.class);
+        beanDefinition.setBeanClass(RpcRegistry.class);
         beanDefinition.getPropertyValues().addPropertyValue("ipAddress", ipAddress);
         beanDefinition.getPropertyValues().addPropertyValue("echoApiPort", echoApiPort);
         beanDefinition.getPropertyValues().addPropertyValue("protocol", protocolType);

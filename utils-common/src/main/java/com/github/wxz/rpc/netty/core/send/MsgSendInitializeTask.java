@@ -55,7 +55,7 @@ public class MsgSendInitializeTask implements Callable<Boolean> {
                     } else {
                         LOGGER.error("future is not success ...");
                         //重试1次
-                        call();
+                        //call();
                     }
                 }
             });

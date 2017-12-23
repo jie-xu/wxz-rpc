@@ -36,7 +36,7 @@ public class JdkNativeHandler implements RpcHandler {
         pipeline.addLast(new LengthFieldPrepender(MessageCodecUtil.MESSAGE_LENGTH));
         pipeline.addLast(new ObjectEncoder());
         pipeline.addLast(new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.weakCachingConcurrentResolver(this.getClass().getClassLoader())));
-        //pipeline.addLast("logging", new LoggingHandler(LogLevel.INFO));
+        ///pipeline.addLast("logging", new LoggingHandler(LogLevel.INFO));
         pipeline.addLast(new MsgRevHandler(handlerMap));
     }
 }

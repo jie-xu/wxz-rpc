@@ -16,7 +16,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
  * @author xianzhi.wang
  * @date 2017/12/19 -16:00
  */
-public class RpcRegistery implements InitializingBean, DisposableBean {
+public class RpcRegistry implements InitializingBean, DisposableBean {
     private String ipAddress;
     private String protocol;
     private String echoApiPort;
@@ -28,8 +28,8 @@ public class RpcRegistery implements InitializingBean, DisposableBean {
         MsgRevExecutor.getInstance().shutDown();
         //关闭JMS
         if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_SUPPORT) {
-            ModuleMetricsHandler handler = ModuleMetricsHandler.getInstance();
-            handler.stop();
+            ModuleMetricsHandler moduleMetricsHandler = ModuleMetricsHandler.getInstance();
+            moduleMetricsHandler.stop();
         }
     }
 
