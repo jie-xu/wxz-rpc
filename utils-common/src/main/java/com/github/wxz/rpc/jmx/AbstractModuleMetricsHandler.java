@@ -64,7 +64,8 @@ public abstract class AbstractModuleMetricsHandler extends NotificationBroadcast
     public List<ModuleMetricsVisitor> getModuleMetricsVisitor() {
         if (RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT) {
             CountDownLatch latch = new CountDownLatch(1);
-            MetricsAggregationTask aggregationTask = new MetricsAggregationTask(aggregationTaskFlag, tasks, visitorList, latch);
+            MetricsAggregationTask aggregationTask =
+                    new MetricsAggregationTask(aggregationTaskFlag, tasks, visitorList, latch);
             CyclicBarrier barrier = new CyclicBarrier(METRICS_VISITOR_LIST_SIZE, aggregationTask);
             for (int i = 0; i < METRICS_VISITOR_LIST_SIZE; i++) {
                 tasks[i] = new MetricsTask(barrier, HashModuleMetricsVisitor.getInstance().getHashVisitorList().get(i));

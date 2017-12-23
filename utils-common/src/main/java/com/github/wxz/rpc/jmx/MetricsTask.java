@@ -86,9 +86,9 @@ public class MetricsTask implements Runnable {
         long invokeSuccessCount = metrics.getInvokeSuccessCount();
         long invokeFailCount = metrics.getInvokeFailCount();
         long invokeFilterCount = metrics.getInvokeFilterCount();
-        long invokeTimespan = metrics.getInvokeTimeStamp();
-        long invokeMinTimespan = metrics.getInvokeMinTimeStamp();
-        long invokeMaxTimespan = metrics.getInvokeMaxTimeStamp();
+        long invokeTimeStamp = metrics.getInvokeTimeStamp();
+        long invokeMinTimeStamp = metrics.getInvokeMinTimeStamp();
+        long invokeMaxTimeStamp = metrics.getInvokeMaxTimeStamp();
         long[] invokeHistogram = metrics.getInvokeHistogram();
         String lastStackTraceDetail = metrics.getLastStackTraceDetail();
         long lastErrorTime = metrics.getLastErrorTime();
@@ -102,15 +102,15 @@ public class MetricsTask implements Runnable {
                 invokeFilterCount += list.get(i).getInvokeFilterCount();
                 long timeStamp = list.get(i).getInvokeTimeStamp();
                 if (timeStamp > 0) {
-                    invokeTimespan = timeStamp;
+                    invokeTimeStamp = timeStamp;
                 }
                 long minTimeStamp = list.get(i).getInvokeMinTimeStamp();
                 long maxTimeStamp = list.get(i).getInvokeMaxTimeStamp();
-                if (minTimeStamp < invokeMinTimespan) {
-                    invokeMinTimespan = minTimeStamp;
+                if (minTimeStamp < invokeMinTimeStamp) {
+                    invokeMinTimeStamp = minTimeStamp;
                 }
-                if (maxTimeStamp > invokeMaxTimespan) {
-                    invokeMaxTimespan = maxTimeStamp;
+                if (maxTimeStamp > invokeMaxTimeStamp) {
+                    invokeMaxTimeStamp = maxTimeStamp;
                 }
 
                 for (int j = 0; j < invokeHistogram.length; j++) {
@@ -132,9 +132,9 @@ public class MetricsTask implements Runnable {
         metrics.setInvokeSuccessCount(invokeSuccessCount);
         metrics.setInvokeFailCount(invokeFailCount);
         metrics.setInvokeFilterCount(invokeFilterCount);
-        metrics.setInvokeTimeStamp(invokeTimespan);
-        metrics.setInvokeMinTimeStamp(invokeMinTimespan);
-        metrics.setInvokeMaxTimeStamp(invokeMaxTimespan);
+        metrics.setInvokeTimeStamp(invokeTimeStamp);
+        metrics.setInvokeMinTimeStamp(invokeMinTimeStamp);
+        metrics.setInvokeMaxTimeStamp(invokeMaxTimeStamp);
         metrics.setInvokeHistogram(invokeHistogram);
         metrics.setLastStackTraceDetail(lastStackTraceDetail);
         metrics.setLastErrorTime(lastErrorTime);

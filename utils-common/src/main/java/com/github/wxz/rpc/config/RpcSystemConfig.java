@@ -20,9 +20,13 @@ public class RpcSystemConfig {
     public static final int SYSTEM_PROPERTY_CLIENT_RECONNECT_DELAY = Integer.parseInt(System.getProperty("rpc.default.client.reconnect.delay", "10"));
 
     public static final int SYSTEM_PROPERTY_PARALLEL = Math.max(2, Runtime.getRuntime().availableProcessors());
-
+    /**
+     * num
+     */
     public static final int SYSTEM_PROPERTY_JMX_METRICS_HASH_NUMS = Integer.getInteger("rpc.jmx.metrics.hash.nums", 8);
-
+    /**
+     * fair表示是否是公平的，即等待时间越久的越先获取许可
+     */
     public static final int SYSTEM_PROPERTY_JMX_METRICS_LOCK_FAIR = Integer.getInteger("rpc.jmx.metrics.lock.fair", 0);
 
     public static final boolean SYSTEM_PROPERTY_JMX_METRICS_HASH_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_METRICS_HASH_NUMS != 1;
@@ -48,7 +52,9 @@ public class RpcSystemConfig {
     public static final int SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS = 600000;
 
     private static final int SYSTEM_PROPERTY_JMX_INVOKE_METRICS = Integer.getInteger("rpc.jmx.invoke.metrics", 1);
-
+    /**
+     * JMX_METRICS_SUPPORT
+     */
     public static final boolean SYSTEM_PROPERTY_JMX_METRICS_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0;
     /**
      * module_metrics_jmx_port  RMIService监听的端口

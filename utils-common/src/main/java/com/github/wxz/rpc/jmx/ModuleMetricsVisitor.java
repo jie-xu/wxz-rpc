@@ -1,6 +1,7 @@
 package com.github.wxz.rpc.jmx;
 
 import com.alibaba.druid.util.Histogram;
+import com.alibaba.fastjson.JSON;
 import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.utils.DateUtils;
 
@@ -26,28 +27,28 @@ public class ModuleMetricsVisitor {
     /**
      * 名称
      */
-    private static final String[] THROWABLE_NAMES = {"message", "class", "stackTrace"};
+    private static final transient String[] THROWABLE_NAMES = {"message", "class", "stackTrace"};
     /**
      * 描述信息
      */
-    private static final String[] THROWABLE_DESCRIPTIONS = {"message", "class", "stackTrace"};
-    private static final OpenType<?>[] THROWABLE_TYPES = new OpenType<?>[]{SimpleType.STRING, SimpleType.STRING, SimpleType.STRING};
+    private static final transient String[] THROWABLE_DESCRIPTIONS = {"message", "class", "stackTrace"};
+    private static final transient OpenType<?>[] THROWABLE_TYPES = new OpenType<?>[]{SimpleType.STRING, SimpleType.STRING, SimpleType.STRING};
     /**
      * 复合类型
      */
-    private static CompositeType THROWABLE_COMPOSITE_TYPE = null;
-    private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeCount");
-    private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeSuccessCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeSuccessCount");
-    private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeFailCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeFailCount");
-    private final AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeFilterCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeFilterCount");
+    private static transient CompositeType THROWABLE_COMPOSITE_TYPE = null;
+    private final transient AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeCount");
+    private final transient AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeSuccessCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeSuccessCount");
+    private final transient AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeFailCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeFailCount");
+    private final transient AtomicLongFieldUpdater<ModuleMetricsVisitor> invokeFilterCountUpdater = AtomicLongFieldUpdater.newUpdater(ModuleMetricsVisitor.class, "invokeFilterCount");
     /**
      * class 名称
      */
-    private String moduleName;
+    private transient String moduleName;
     /**
      * 方法名称
      */
-    private String methodName;
+    private transient String methodName;
     private volatile long invokeCount = 0L;
     private volatile long invokeSuccessCount = 0L;
     private volatile long invokeFailCount = 0L;
@@ -55,12 +56,12 @@ public class ModuleMetricsVisitor {
     private long invokeTimeStamp = 0L;
     private long invokeMinTimeStamp = DEFAULT_INVOKE_MIN_TIMESTAMP;
     private long invokeMaxTimeStamp = 0L;
-    private long[] invokeHistogram;
-    private Exception lastStackTrace;
-    private String lastStackTraceDetail;
+    private transient long[] invokeHistogram;
+    private transient Exception lastStackTrace;
+    private transient String lastStackTraceDetail;
     private long lastErrorTime;
-    private int hashKey = 0;
-    private Histogram histogram = new Histogram(TimeUnit.MILLISECONDS, new long[]{1, 10, 100, 1000, 10 * 1000, 100 * 1000, 1000 * 1000});
+    private transient int hashKey = 0;
+    private transient Histogram histogram = new Histogram(TimeUnit.MILLISECONDS, new long[]{1, 10, 100, 1000, 10 * 1000, 100 * 1000, 1000 * 1000});
 
     @ConstructorProperties({"moduleName", "methodName"})
     public ModuleMetricsVisitor(String moduleName, String methodName) {
@@ -154,13 +155,10 @@ public class ModuleMetricsVisitor {
         if (error == null) {
             return null;
         }
-
-        Map<String, Object> map = new HashMap<String, Object>(512);
-
+        Map<String, Object> map = new HashMap<>(512);
         map.put("class", error.getClass().getName());
         map.put("message", error.getMessage());
         map.put("stackTrace", getStackTrace(error));
-
         return new CompositeDataSupport(getThrowableCompositeType(), map);
     }
 
@@ -292,7 +290,7 @@ public class ModuleMetricsVisitor {
 
     @Override
     public String toString() {
-        return String.format("<<[moduleName:%s]-[methodName:%s]>> [invokeCount:%d][invokeSuccessCount:%d][invokeFilterCount:%d][invokeTimeStamp:%d][invokeMinTimeStamp:%d][invokeMaxTimeStamp:%d][invokeFailCount:%d][lastErrorTime:%d][lastStackTraceDetail:%s]", moduleName, methodName, invokeCount, invokeSuccessCount, invokeFilterCount, invokeTimeStamp, invokeMinTimeStamp, invokeMaxTimeStamp, invokeFailCount, lastErrorTime, lastStackTraceDetail);
+        return JSON.toJSONString(this);
     }
 }
 
