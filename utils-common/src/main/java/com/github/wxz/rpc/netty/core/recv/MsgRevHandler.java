@@ -2,8 +2,8 @@ package com.github.wxz.rpc.netty.core.recv;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.invoke.RevInitTaskFacade;
-import com.github.wxz.rpc.netty.model.MsgRequest;
-import com.github.wxz.rpc.netty.model.MsgResponse;
+import com.github.wxz.rpc.model.MsgRequest;
+import com.github.wxz.rpc.model.MsgResponse;
 import com.github.wxz.rpc.parallel.ExecutorManager;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;

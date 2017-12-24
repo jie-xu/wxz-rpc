@@ -1,4 +1,4 @@
-package com.github.wxz.rpc.netty.model;
+package com.github.wxz.rpc.model;
 
 import com.alibaba.fastjson.JSON;
 

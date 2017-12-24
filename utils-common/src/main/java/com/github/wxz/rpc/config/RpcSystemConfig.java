@@ -5,6 +5,9 @@ package com.github.wxz.rpc.config;
  * @date 2017/12/19 -16:52
  */
 public class RpcSystemConfig {
+
+    public static final String FAVICON_ICO = "/favicon.ico";
+
     public static final String SYSTEM_PROPERTY_THREAD_POOL_REJECTED_POLICY_ATTR = "rpc.parallel.rejected.policy";
 
     public static final String SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NAME_ATTR = "rpc.parallel.queue";

@@ -1,7 +1,7 @@
 package com.github.wxz.rpc.netty.core.invoke;
 
-import com.github.wxz.rpc.netty.model.MsgRequest;
-import com.github.wxz.rpc.netty.model.MsgResponse;
+import com.github.wxz.rpc.model.MsgRequest;
+import com.github.wxz.rpc.model.MsgResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

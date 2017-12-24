@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.core.invoke;
 
-import com.github.wxz.rpc.netty.model.MsgRequest;
+import com.github.wxz.rpc.model.MsgRequest;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;

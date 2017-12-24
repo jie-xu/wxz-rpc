@@ -2,15 +2,13 @@ package com.github.wxz.rpc.netty.core.invoke;
 
 import com.alibaba.fastjson.JSON;
 import com.github.wxz.rpc.config.RpcSystemConfig;
-import com.github.wxz.rpc.netty.model.MsgRequest;
-import com.github.wxz.rpc.netty.model.MsgResponse;
+import com.github.wxz.rpc.model.MsgRequest;
+import com.github.wxz.rpc.model.MsgResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.ProxyFactory;
 import org.springframework.aop.support.NameMatchMethodPointcutAdvisor;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Map;
 import java.util.concurrent.Callable;
 

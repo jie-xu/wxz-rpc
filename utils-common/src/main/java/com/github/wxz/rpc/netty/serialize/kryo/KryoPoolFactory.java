@@ -3,8 +3,8 @@ package com.github.wxz.rpc.netty.serialize.kryo;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.pool.KryoFactory;
 import com.esotericsoftware.kryo.pool.KryoPool;
-import com.github.wxz.rpc.netty.model.MsgRequest;
-import com.github.wxz.rpc.netty.model.MsgResponse;
+import com.github.wxz.rpc.model.MsgRequest;
+import com.github.wxz.rpc.model.MsgResponse;
 import org.objenesis.strategy.StdInstantiatorStrategy;
 
 /**

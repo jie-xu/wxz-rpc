@@ -2,7 +2,7 @@ package com.github.wxz.rpc.netty.core.invoke;
 
 import com.github.wxz.rpc.filter.Filter;
 import com.github.wxz.rpc.filter.ServiceFilterBinder;
-import com.github.wxz.rpc.netty.model.MsgRequest;
+import com.github.wxz.rpc.model.MsgRequest;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.ArrayUtils;

@@ -2,8 +2,8 @@ package com.github.wxz.rpc.netty.core.invoke;
 
 import com.github.wxz.rpc.config.RpcSystemConfig;
 import com.github.wxz.rpc.netty.core.invoke.hash.HashMsgRevInitializeTask;
-import com.github.wxz.rpc.netty.model.MsgRequest;
-import com.github.wxz.rpc.netty.model.MsgResponse;
+import com.github.wxz.rpc.model.MsgRequest;
+import com.github.wxz.rpc.model.MsgResponse;
 
 import java.util.Map;
 import java.util.concurrent.Callable;

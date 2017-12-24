@@ -1,8 +1,8 @@
 package com.github.wxz.rpc.netty.core.send;
 
 import com.github.wxz.rpc.netty.core.MsgCallBack;
-import com.github.wxz.rpc.netty.model.MsgRequest;
-import com.github.wxz.rpc.netty.model.MsgResponse;
+import com.github.wxz.rpc.model.MsgRequest;
+import com.github.wxz.rpc.model.MsgResponse;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
