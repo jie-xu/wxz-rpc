@@ -1,5 +1,8 @@
 package com.github.wxz.config;
 
+import com.github.wxz.http.ui.template.DefaultEngine;
+import com.github.wxz.http.ui.template.TemplateEngine;
+
 /**
  * @author xianzhi.wang
  * @date 2017/12/24 -13:04
@@ -49,6 +52,16 @@ public class HttpServerConfig extends ServerConfig {
      * 是否记录异常的请求日志
      */
     private boolean isStoreErrorRequestLog = false;
+
+    private TemplateEngine templateEngine ;
+
+    public TemplateEngine getTemplateEngine() {
+        return  new DefaultEngine();
+    }
+
+    public void setTemplateEngine(TemplateEngine templateEngine) {
+        this.templateEngine = templateEngine;
+    }
 
     public int getCompressionLevel() {
         return compressionLevel;

@@ -1,6 +1,8 @@
 package com.github.wxz.config;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author xianzhi.wang
@@ -10,7 +12,17 @@ public class RpcSystemConfig {
 
     public static final String FAVICON_ICO = "/favicon.ico";
 
-    public static final String TEMPLATE_PATH = "templates";
+    public static final String TEMPLATE_PATH = "tpl";
+
+    public static final List<String> DEFAULT_STATICS =
+            Arrays.asList(
+                    new String[]{"/favicon.ico",
+                    "/robots.txt",
+                    "/static/",
+                    "/upload/",
+                    "/webjars/"});
+
+
     /**
      * class path
      */
