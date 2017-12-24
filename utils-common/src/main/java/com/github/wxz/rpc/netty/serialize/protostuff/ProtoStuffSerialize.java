@@ -1,7 +1,4 @@
-
 package com.github.wxz.rpc.netty.serialize.protostuff;
-
-
 
 import com.dyuproject.protostuff.LinkedBuffer;
 import com.dyuproject.protostuff.ProtostuffIOUtil;
@@ -11,7 +8,6 @@ import com.github.wxz.rpc.model.MsgResponse;
 import com.github.wxz.rpc.netty.serialize.RpcSerialize;
 import org.springframework.objenesis.Objenesis;
 import org.springframework.objenesis.ObjenesisStd;
-
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -24,6 +20,10 @@ public class ProtoStuffSerialize implements RpcSerialize {
     private static Objenesis objenesis = new ObjenesisStd(true);
     private boolean rpcDirect = false;
 
+    private static <T> Schema<T> getSchema(Class<T> cls) {
+        return (Schema<T>) cachedSchema.get(cls);
+    }
+
     public boolean isRpcDirect() {
         return rpcDirect;
     }
@@ -32,15 +32,11 @@ public class ProtoStuffSerialize implements RpcSerialize {
         this.rpcDirect = rpcDirect;
     }
 
-    private static <T> Schema<T> getSchema(Class<T> cls) {
-        return (Schema<T>) cachedSchema.get(cls);
-    }
-
     @Override
     public Object deserialize(InputStream input) {
         try {
             Class cls = isRpcDirect() ? MsgRequest.class : MsgResponse.class;
-            Object message = (Object) objenesis.newInstance(cls);
+            Object message = objenesis.newInstance(cls);
             Schema<Object> schema = getSchema(cls);
             ProtostuffIOUtil.mergeFrom(input, message, schema);
             return message;
@@ -51,7 +47,7 @@ public class ProtoStuffSerialize implements RpcSerialize {
 
     @Override
     public void serialize(OutputStream output, Object object) {
-        Class cls = (Class) object.getClass();
+        Class cls = object.getClass();
         LinkedBuffer buffer = LinkedBuffer.allocate(LinkedBuffer.DEFAULT_BUFFER_SIZE);
         try {
             Schema schema = getSchema(cls);

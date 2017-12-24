@@ -146,7 +146,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler implement
 
             LOGGER.info("rpc JMX server is execute success! jmx-url: {}", moduleMetricsJmxUrl);
         } catch (Exception e) {
-            LOGGER.error("exception {}", e.getStackTrace());
+            LOGGER.error("exception {}", e);
         }
     }
 
@@ -163,7 +163,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler implement
                 LOGGER.error("jmx threadPoolExecutor is not terminated");
             }
         } catch (Exception e) {
-            LOGGER.error("stop exception {}", e.getStackTrace());
+            LOGGER.error("stop exception {}", e);
         }
     }
 
@@ -176,7 +176,7 @@ public class ModuleMetricsHandler extends AbstractModuleMetricsHandler implement
             JMXConnector jmxConnector = JMXConnectorFactory.connect(url, null);
             connection = jmxConnector.getMBeanServerConnection();
         } catch (Exception e) {
-            LOGGER.error("connect exception {}", e.getStackTrace());
+            LOGGER.error("connect exception {}", e);
         }
         return connection;
     }
