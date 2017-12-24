@@ -9,7 +9,7 @@
 
     <context:property-placeholder location="classpath:rpc-server.properties"/>
 
-    <nettyrpc:reference id="addCalculate" interfaceName="com.github.wxz.rpc.service.AddCalculate"
+    <nettyrpc:reference id="addCalculate" interfaceName="com.github.wxz.service.AddCalculate"
                         protocol="PROTO_STUFF_SERIALIZE" ipAddress="${rpc.server.address}"/>
 
 

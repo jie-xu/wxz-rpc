@@ -3,7 +3,7 @@ package com.github.wxz.rpc.spring;
 import com.github.wxz.rpc.event.ServerStartEvent;
 import com.github.wxz.rpc.filter.Filter;
 import com.github.wxz.rpc.filter.ServiceFilterBinder;
-import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
+import com.github.wxz.rpc.core.recv.MsgRevExecutor;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

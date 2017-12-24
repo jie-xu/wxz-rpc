@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.parallel;
 
-import com.github.wxz.rpc.config.RpcSystemConfig;
+import com.github.wxz.config.RpcSystemConfig;
 import com.github.wxz.rpc.parallel.policy.*;
 import com.github.wxz.rpc.parallel.queue.BlockingQueueType;
 import com.google.common.util.concurrent.ListenableFuture;

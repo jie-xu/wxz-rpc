@@ -1,7 +1,7 @@
 package com.github.wxz.rpc.event;
 
 
-import com.github.wxz.rpc.jmx.ModuleMetricsHandler;
+import com.github.wxz.jmx.ModuleMetricsHandler;
 
 import javax.management.Notification;
 

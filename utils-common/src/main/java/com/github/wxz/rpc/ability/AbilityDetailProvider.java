@@ -1,8 +1,8 @@
 package com.github.wxz.rpc.ability;
 
 
-import com.github.wxz.rpc.netty.core.recv.MsgRevExecutor;
-import com.github.wxz.rpc.utils.ReflectionUtils;
+import com.github.wxz.rpc.core.recv.MsgRevExecutor;
+import com.github.wxz.utils.ReflectionUtils;
 
 import java.util.Iterator;
 import java.util.Map;
