@@ -32,10 +32,6 @@ public class MsgRevExecutor extends Thread implements ApplicationContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(MsgRevExecutor.class);
     private static final int PARALLEL = RpcSystemConfig.SYSTEM_PROPERTY_PARALLEL;
     private static volatile MsgRevExecutor msgRevExecutor = null;
-    /**
-     * 是否开启http
-     */
-    private static boolean HTTP_FLAG = true;
     ThreadFactory threadRpcFactory = new NamedThreadFactory("rpc ThreadFactory");
     EventLoopGroup boss = new NioEventLoopGroup();
     EventLoopGroup worker = new NioEventLoopGroup(
