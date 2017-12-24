@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.model;
 
-import com.github.wxz.rpc.utils.HostUtil;
+import com.github.wxz.rpc.utils.HostUtils;
 
 /**
  * @author xianzhi.wang
@@ -8,7 +8,7 @@ import com.github.wxz.rpc.utils.HostUtil;
  */
 public class ApiRequest {
     private String clientIp = "";
-    private String serverIp = HostUtil.serverIp;
+    private String serverIp = HostUtils.serverIp;
 
     public String getClientIp() {
         return clientIp;

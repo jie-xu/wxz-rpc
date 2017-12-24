@@ -1,7 +1,7 @@
 package com.github.wxz.rpc.log;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.github.wxz.rpc.utils.HostUtil;
+import com.github.wxz.rpc.utils.HostUtils;
 
 import java.util.Date;
 
@@ -27,7 +27,7 @@ public class XzLog {
     private String clientIp = "";
     //服务端IP
     @JSONField(name = "s_ip")
-    private String serverIp = HostUtil.serverIp;
+    private String serverIp = HostUtils.serverIp;
     //终端设备标识(接口单词写错了)
     @JSONField(name = "device_id")
     private String deviceId = "";

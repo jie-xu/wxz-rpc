@@ -26,7 +26,7 @@ public class ExecutorManager {
             0L, TimeUnit.MILLISECONDS,
             createBlockingQueue(
                     RpcSystemConfig.SYSTEM_PROPERTY_THREAD_POOL_QUEUE_NUMS),
-            new NamedThreadFactory("rpcThreadPool", true),
+            new NamedThreadFactory("http-thread-pool@", true),
             createPolicy());
 
     private static ListeningExecutorService ListeningThreadPoolExecutor =

@@ -17,10 +17,9 @@ import java.util.Map;
  */
 @Configuration
 @ComponentScan("com.github.wxz.*")
-public class HttpBoot {
-
-    public static void httpStart() {
-
+public class HttpBoot implements Runnable {
+    @Override
+    public void run() {
         AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(HttpBoot.class);
         HttpServerConfig httpServerConfig = new HttpServerConfig();
         httpServerConfig.setIsEnableSsl(false);

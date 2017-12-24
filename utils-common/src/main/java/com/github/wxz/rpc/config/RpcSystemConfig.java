@@ -1,5 +1,7 @@
 package com.github.wxz.rpc.config;
 
+import java.io.File;
+
 /**
  * @author xianzhi.wang
  * @date 2017/12/19 -16:52
@@ -7,6 +9,12 @@ package com.github.wxz.rpc.config;
 public class RpcSystemConfig {
 
     public static final String FAVICON_ICO = "/favicon.ico";
+
+    public static final String TEMPLATE_PATH = "templates";
+    /**
+     * class path
+     */
+    public static final String CLASS_PATH = new File(RpcSystemConfig.class.getResource("/").getPath()).getPath();
 
     public static final String SYSTEM_PROPERTY_THREAD_POOL_REJECTED_POLICY_ATTR = "rpc.parallel.rejected.policy";
 
@@ -53,22 +61,19 @@ public class RpcSystemConfig {
     public static final int SERIALIZE_POOL_MAX_WAIT_MILLIS = 5000;
 
     public static final int SERIALIZE_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS = 600000;
-
+    /**
+     * module_metrics_jmx_port  RMIService监听的端口
+     */
+    public final static int MODULE_METRICS_JMX_PORT = 1098;
+    /**
+     * MBEAN_NAME
+     */
+    public final static String MBEAN_NAME = "com.github.wxz.rpc:type=ModuleMetricsHandler";
     private static final int SYSTEM_PROPERTY_JMX_INVOKE_METRICS = Integer.getInteger("rpc.jmx.invoke.metrics", 1);
     /**
      * JMX_METRICS_SUPPORT
      */
     public static final boolean SYSTEM_PROPERTY_JMX_METRICS_SUPPORT = RpcSystemConfig.SYSTEM_PROPERTY_JMX_INVOKE_METRICS != 0;
-    /**
-     * module_metrics_jmx_port  RMIService监听的端口
-     */
-    public final static int MODULE_METRICS_JMX_PORT = 1098;
-
-    /**
-     * MBEAN_NAME
-     */
-    public final static String MBEAN_NAME = "com.github.wxz.rpc:type=ModuleMetricsHandler";
-
     private static boolean monitorServerSupport = false;
 
     public static boolean isMonitorServerSupport() {

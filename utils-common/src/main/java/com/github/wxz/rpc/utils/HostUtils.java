@@ -14,8 +14,8 @@ import java.util.List;
  * @author xianzhi.wang
  * @date 2017/12/24 -13:53
  */
-public class HostUtil {
-    private static final Logger LOGGER = LoggerFactory.getLogger(HostUtil.class);
+public class HostUtils {
+    private static final Logger LOGGER = LoggerFactory.getLogger(HostUtils.class);
     public static String serverIp = "";
 
     static {

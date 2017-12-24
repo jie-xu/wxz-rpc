@@ -30,6 +30,11 @@ public class RpcNamespaceHandler extends NamespaceHandlerSupport {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        LOGGER.info("Environment: jdk.version    => {}", System.getProperty("java.version"));
+        LOGGER.info("Environment: user.dir       => {}", System.getProperty("user.dir"));
+        LOGGER.info("Environment: java.io.tmpdir => {}", System.getProperty("java.io.tmpdir"));
+        LOGGER.info("Environment: user.timezone  => {}", System.getProperty("user.timezone"));
+        LOGGER.info("Environment: file.encoding  => {}", System.getProperty("file.encoding"));
     }
 
     @Override

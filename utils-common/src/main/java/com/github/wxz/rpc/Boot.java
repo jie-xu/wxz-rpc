@@ -1,6 +1,7 @@
 package com.github.wxz.rpc;
 
 import com.github.wxz.rpc.netty.resolver.HttpBoot;
+import com.github.wxz.rpc.parallel.ExecutorManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
@@ -11,7 +12,7 @@ public class Boot {
     public static void main(String[] args) {
 
         //启动http服务
-        HttpBoot.httpStart();
+        ExecutorManager.execute(new HttpBoot());
 
         //启动rpc
         new ClassPathXmlApplicationContext(
