@@ -2,7 +2,6 @@ package com.github.wxz.http.ui.template;
 
 import com.github.wxz.http.ui.ModelAndView;
 import com.github.wxz.rpc.exception.TemplateException;
-
 import java.io.Writer;
 
 /**

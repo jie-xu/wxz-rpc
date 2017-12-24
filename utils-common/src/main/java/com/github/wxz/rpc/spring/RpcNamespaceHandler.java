@@ -28,7 +28,7 @@ public class RpcNamespaceHandler extends NamespaceHandlerSupport {
             LOGGER.info(text);
             reader.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOGGER.error("exception", e);
         }
         LOGGER.info("Environment: jdk.version    => {}", System.getProperty("java.version"));
         LOGGER.info("Environment: user.dir       => {}", System.getProperty("user.dir"));

@@ -22,6 +22,7 @@ import java.io.InputStream;
 
 /**
  * ApiEchoResolver
+ * netty 开启http服务
  *
  * @author xianzhi.wang
  * @date 2017/12/19 -17:11

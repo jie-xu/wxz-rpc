@@ -5,6 +5,7 @@ import com.github.wxz.rpc.parallel.ExecutorManager;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
+ * 启动类
  * @author xianzhi.wang
  * @date 2017/12/19 -15:57
  */
