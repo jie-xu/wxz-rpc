@@ -16,12 +16,12 @@ import java.util.Properties;
  * @author xianzhi.wang
  * @date 2017/12/24 -17:37
  */
-public class JetＢrickTemplateEngine implements TemplateEngine {
+public class JetBrickTemplateEngine implements TemplateEngine {
     private JetEngine jetEngine;
     private Properties config = new Properties();
     private String suffix = ".html";
 
-    public JetＢrickTemplateEngine() {
+    public JetBrickTemplateEngine() {
         this.config.put("jetx.template.suffix", this.suffix);
         String classpathLoader = "jetbrick.template.loader.ClasspathResourceLoader";
         this.config.put("jetx.template.loaders", "$classpathLoader");
@@ -30,16 +30,16 @@ public class JetＢrickTemplateEngine implements TemplateEngine {
         this.config.put("$classpathLoader.reloadable", "true");
     }
 
-    public JetＢrickTemplateEngine(Properties config) {
+    public JetBrickTemplateEngine(Properties config) {
         this.config = config;
         this.jetEngine = JetEngine.create(config);
     }
 
-    public JetＢrickTemplateEngine(String conf) {
+    public JetBrickTemplateEngine(String conf) {
         this.jetEngine = JetEngine.create(conf);
     }
 
-    public JetＢrickTemplateEngine(JetEngine jetEngine) {
+    public JetBrickTemplateEngine(JetEngine jetEngine) {
         if (null == jetEngine) {
             throw new IllegalArgumentException("jetEngine must not be null");
         } else {

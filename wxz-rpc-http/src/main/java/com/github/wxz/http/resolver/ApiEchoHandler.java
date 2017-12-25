@@ -10,8 +10,7 @@ import com.github.wxz.http.log.XzLogger;
 import com.github.wxz.http.model.ApiHttpRequest;
 import com.github.wxz.http.model.ApiHttpResponse;
 import com.github.wxz.http.ui.ModelAndView;
-import com.github.wxz.http.ui.template.JetＢrickTemplateEngine;
-import com.github.wxz.http.ui.template.TemplateEngine;
+import com.github.wxz.http.ui.template.JetBrickTemplateEngine;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFutureListener;
@@ -124,7 +123,7 @@ public class ApiEchoHandler extends SimpleChannelInboundHandler<HttpObject> {
                 StringWriter sw = new StringWriter();
                 ModelAndView modelAndView = new ModelAndView();
                 modelAndView.setView("login.html");
-                new JetＢrickTemplateEngine().render(modelAndView, sw);
+                new JetBrickTemplateEngine().render(modelAndView, sw);
                 ByteBuf buffer = Unpooled.wrappedBuffer(sw.toString().getBytes("utf-8"));
                 FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
 

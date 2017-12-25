@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/wxz-rpc.iml" filepath="$PROJECT_DIR$/wxz-rpc.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wxz-rpc-api/wxz-rpc-api.iml" filepath="$PROJECT_DIR$/wxz-rpc-api/wxz-rpc-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wxz-rpc-client/wxz-rpc-client.iml" filepath="$PROJECT_DIR$/wxz-rpc-client/wxz-rpc-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wxz-rpc-core/wxz-rpc-core.iml" filepath="$PROJECT_DIR$/wxz-rpc-core/wxz-rpc-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wxz-rpc-http/wxz-rpc-http.iml" filepath="$PROJECT_DIR$/wxz-rpc-http/wxz-rpc-http.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wxz-rpc-provider/wxz-rpc-provider.iml" filepath="$PROJECT_DIR$/wxz-rpc-provider/wxz-rpc-provider.iml" />
+    </modules>
+  </component>
+</project>
