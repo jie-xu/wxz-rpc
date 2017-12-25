@@ -9,7 +9,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>wxz-rpc-core</artifactId>
+    <artifactId>wxz-rpc-http</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.github.wxz</groupId>
+            <artifactId>wxz-rpc-core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 
 </project>

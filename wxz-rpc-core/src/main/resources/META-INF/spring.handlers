@@ -1,1 +1,1 @@
-http\://www.wxz.com/rpc=com.github.wxz.rpc.spring.RpcNamespaceHandler
+http\://www.wxz.com/rpc=com.github.wxz.core.rpc.spring.RpcNamespaceHandler
