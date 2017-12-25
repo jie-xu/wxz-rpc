@@ -7,7 +7,7 @@ import com.github.wxz.http.log.XzLogger;
 import com.github.wxz.http.model.ApiHttpRequest;
 import com.github.wxz.http.model.ApiHttpResponse;
 import com.github.wxz.http.ui.ModelAndView;
-import com.github.wxz.http.ui.template.JetbrickTemplateEngine;
+import com.github.wxz.http.ui.template.JetＢrickTemplateEngine;
 import com.github.wxz.jmx.ModuleMetricsProcessor;
 import com.github.wxz.rpc.ability.AbilityDetailProvider;
 import com.github.wxz.utils.UriUtils;
@@ -125,7 +125,7 @@ public class ApiEchoHandler extends SimpleChannelInboundHandler<HttpObject> {
                 ModelAndView modelAndView = new ModelAndView();
                 //new String(apiHttpResponse.getContent()
                 modelAndView.setView("login.html");
-                new JetbrickTemplateEngine().render(modelAndView, sw);
+                new JetＢrickTemplateEngine().render(modelAndView, sw);
                 System.out.println(sw.toString());
                 ByteBuf buffer = Unpooled.wrappedBuffer(sw.toString().getBytes("utf-8"));
                 FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(200), buffer);

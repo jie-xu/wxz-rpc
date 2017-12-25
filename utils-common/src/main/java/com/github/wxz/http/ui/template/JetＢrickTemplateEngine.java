@@ -1,7 +1,7 @@
 package com.github.wxz.http.ui.template;
 
-import com.github.wxz.http.ui.ModelAndView;
 import com.github.wxz.exception.TemplateException;
+import com.github.wxz.http.ui.ModelAndView;
 import jetbrick.template.JetContext;
 import jetbrick.template.JetEngine;
 import jetbrick.template.JetGlobalContext;
@@ -16,12 +16,12 @@ import java.util.Properties;
  * @author xianzhi.wang
  * @date 2017/12/24 -17:37
  */
-public class JetbrickTemplateEngine implements TemplateEngine {
+public class JetＢrickTemplateEngine implements TemplateEngine {
     private JetEngine jetEngine;
     private Properties config = new Properties();
     private String suffix = ".html";
-    public JetbrickTemplateEngine() {
 
+    public JetＢrickTemplateEngine() {
         this.config.put("jetx.template.suffix", this.suffix);
         String classpathLoader = "jetbrick.template.loader.ClasspathResourceLoader";
         this.config.put("jetx.template.loaders", "$classpathLoader");
@@ -29,15 +29,33 @@ public class JetbrickTemplateEngine implements TemplateEngine {
         this.config.put("$classpathLoader.root", "/tpl/");
         this.config.put("$classpathLoader.reloadable", "true");
     }
+
+    public JetＢrickTemplateEngine(Properties config) {
+        this.config = config;
+        this.jetEngine = JetEngine.create(config);
+    }
+
+    public JetＢrickTemplateEngine(String conf) {
+        this.jetEngine = JetEngine.create(conf);
+    }
+
+    public JetＢrickTemplateEngine(JetEngine jetEngine) {
+        if (null == jetEngine) {
+            throw new IllegalArgumentException("jetEngine must not be null");
+        } else {
+            this.jetEngine = jetEngine;
+        }
+    }
+
     @Override
     public void render(ModelAndView modelAndView, Writer writer) throws TemplateException {
-        if(null == this.jetEngine) {
+        if (null == this.jetEngine) {
             this.jetEngine = JetEngine.create(this.config);
         }
         Map<String, Object> modelMap = modelAndView.getModel();
         JetContext context = new JetContext(modelMap.size());
         context.putAll(modelMap);
-        String templateName = modelAndView.getView().endsWith(this.suffix)?modelAndView.getView():modelAndView.getView() + this.suffix;
+        String templateName = modelAndView.getView().endsWith(this.suffix) ? modelAndView.getView() : modelAndView.getView() + this.suffix;
 
         try {
             JetTemplate template = this.jetEngine.getTemplate(templateName);
@@ -47,24 +65,8 @@ public class JetbrickTemplateEngine implements TemplateEngine {
         }
     }
 
-    public JetbrickTemplateEngine(Properties config) {
-        this.config = config;
-        this.jetEngine = JetEngine.create(config);
-    }
-
-    public JetbrickTemplateEngine(String conf) {
-        this.jetEngine = JetEngine.create(conf);
-    }
-
-    public JetbrickTemplateEngine(JetEngine jetEngine) {
-        if(null == jetEngine) {
-            throw new IllegalArgumentException("jetEngine must not be null");
-        } else {
-            this.jetEngine = jetEngine;
-        }
-    }
     public JetGlobalContext getGlobalContext() {
-        if(null == this.jetEngine) {
+        if (null == this.jetEngine) {
             this.jetEngine = JetEngine.create(this.config);
         }
 
@@ -72,7 +74,7 @@ public class JetbrickTemplateEngine implements TemplateEngine {
     }
 
     public GlobalResolver getGlobalResolver() {
-        if(null == this.jetEngine) {
+        if (null == this.jetEngine) {
             this.jetEngine = JetEngine.create(this.config);
         }
 
