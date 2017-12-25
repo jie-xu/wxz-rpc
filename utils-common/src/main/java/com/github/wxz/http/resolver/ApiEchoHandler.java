@@ -13,6 +13,7 @@ import com.github.wxz.rpc.ability.AbilityDetailProvider;
 import com.github.wxz.utils.UriUtils;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
@@ -119,27 +120,22 @@ public class ApiEchoHandler extends SimpleChannelInboundHandler<HttpObject> {
                     xzLog.setResult("-1");
                     XzLogger.error(xzLog);
                 }
-                // if(true){
                 //TODO tpl
                 StringWriter sw = new StringWriter();
                 ModelAndView modelAndView = new ModelAndView();
-                //new String(apiHttpResponse.getContent()
                 modelAndView.setView("login.html");
-                new JetＢrickTemplateEngine().render(modelAndView, sw);
-                System.out.println(sw.toString());
+                httpServerConfig.getTemplateEngine().render(modelAndView, sw);
                 ByteBuf buffer = Unpooled.wrappedBuffer(sw.toString().getBytes("utf-8"));
-                FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.valueOf(200), buffer);
-                CharSequence CONNECTION = AsciiString.cached("Connection");
+                FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.OK, buffer);
 
-                CharSequence CONTENT_LENGTH = AsciiString.cached("Content-Length");
-                response.headers().set(CONNECTION, true);
-                response.headers().set(CONTENT_LENGTH, String.valueOf(response.content().readableBytes()));
+                response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
+                response.headers().set(HttpHeaderNames.CONTENT_LENGTH, String.valueOf(response.content().readableBytes()));
                 ctx.writeAndFlush(response, ctx.voidPromise());
 
-                // }
 
 
-         /*       FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(
+
+               FullHttpResponse fullHttpResponse = new DefaultFullHttpResponse(
                         HttpVersion.HTTP_1_1,
                         apiHttpResponse.getHttpResponseStatus(),
                         Unpooled.wrappedBuffer(contentBytes));
@@ -158,7 +154,7 @@ public class ApiEchoHandler extends SimpleChannelInboundHandler<HttpObject> {
                     fullHttpResponse.headers().set(HttpHeaderNames.CONNECTION,
                             HttpHeaderValues.KEEP_ALIVE);
                     ctx.writeAndFlush(fullHttpResponse);
-                }*/
+                }
             } catch (UnsupportedEncodingException e) {
                 LOGGER.error("exception", e);
             }

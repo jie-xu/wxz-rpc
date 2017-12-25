@@ -29,7 +29,7 @@ public class HttpCallback {
         ApiHttpResponse apiHttpResponse = new ApiHttpResponse();
         LOGGER.info("apiHttpRequest {}", JSON.toJSONString(apiHttpRequest));
         if (apiHttpRequest == null) {
-            JsonResult jsonResult = JsonResult.getInstance(2, "无效的请求");
+            JsonResult jsonResult = JsonResult.failJsonInstance("无效的请求");
             apiHttpResponse.setContent(JSON.toJSONBytes(jsonResult));
             return apiHttpResponse;
         }

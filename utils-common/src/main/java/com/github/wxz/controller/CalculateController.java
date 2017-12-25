@@ -22,6 +22,6 @@ public class CalculateController implements Api {
     @Override
     public JsonResult handle(RequestContent requestContent) throws Exception {
         LOGGER.info(JSON.toJSONString(requestContent));
-        return JsonResult.getInstance();
+        return JsonResult.jsonInstance();
     }
 }
