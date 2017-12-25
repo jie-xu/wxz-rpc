@@ -11,17 +11,17 @@
     <context:property-placeholder location="classpath:rpc-server.properties"/>
 
     <rpc:service id="addCalculate"
-                 interfaceName="com.github.wxz.rpc.service.AddCalculate"
+                 interfaceName="com.github.wxz.service.AddCalculate"
                  ref="addCalculateImpl" filter="simpleFilter"></rpc:service>
 
-    <bean id="addCalculateImpl" class="com.github.wxz.rpc.service.impl.AddCalculateImpl">
+    <bean id="addCalculateImpl" class="com.github.wxz.service.impl.AddCalculateImpl">
     </bean>
 <!--
     <rpc:service id="addCalculate1"
                  interfaceName="com.github.wxz.rpc.service.AddCalculate1"
                  ref="addCalculateImpl1" filter="simpleFilter"></rpc:service>
 
-    <bean id="addCalculateImpl1" class="com.github.wxz.rpc.service.impl.AddCalculateImpl">
+    <bean id="addCalculateImpl1" claAddCalculateImplImpl">
     </bean>-->
 
     <rpc:registry id="rpcRegistry"

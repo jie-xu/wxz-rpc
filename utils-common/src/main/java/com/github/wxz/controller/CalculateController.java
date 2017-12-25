@@ -1,10 +1,10 @@
 package com.github.wxz.controller;
 
 import com.alibaba.fastjson.JSON;
-import com.github.wxz.rpc.api.Api;
-import com.github.wxz.rpc.api.ApiController;
-import com.github.wxz.rpc.model.JsonResult;
-import com.github.wxz.rpc.model.RequestContent;
+import com.github.wxz.http.api.Api;
+import com.github.wxz.http.api.ApiController;
+import com.github.wxz.http.model.JsonResult;
+import com.github.wxz.http.model.RequestContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;

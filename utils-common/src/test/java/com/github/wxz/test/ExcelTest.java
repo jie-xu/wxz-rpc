@@ -1,8 +1,8 @@
 package com.github.wxz.test;
 
 import com.alibaba.fastjson.JSON;
-import com.github.wxz.other.excel.ExcelExportUtil;
-import com.github.wxz.other.excel.ExcelImportUtil;
+import com.github.wxz.email.excel.excel.ExcelExportUtil;
+import com.github.wxz.email.excel.excel.ExcelImportUtil;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

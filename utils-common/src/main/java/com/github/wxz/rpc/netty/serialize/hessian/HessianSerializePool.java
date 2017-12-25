@@ -1,6 +1,6 @@
 package com.github.wxz.rpc.netty.serialize.hessian;
 
-import com.github.wxz.rpc.config.RpcSystemConfig;
+import com.github.wxz.config.RpcSystemConfig;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 

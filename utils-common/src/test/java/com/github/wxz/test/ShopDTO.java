@@ -1,7 +1,7 @@
 package com.github.wxz.test;
 
-import com.github.wxz.other.excel.annotation.ExcelField;
-import com.github.wxz.other.excel.annotation.ExcelSheet;
+import com.github.wxz.email.excel.excel.annotation.ExcelField;
+import com.github.wxz.email.excel.excel.annotation.ExcelSheet;
 import org.apache.poi.hssf.util.HSSFColor;
 
 import java.time.LocalDateTime;
