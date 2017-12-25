@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:rpc="http://www.wxz.com/rpc"
+       xmlns:wxz-rpc="http://www.wxz.com/rpc"
        xsi:schemaLocation="
 	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
@@ -10,24 +10,17 @@
 
     <context:property-placeholder location="classpath:rpc-server.properties"/>
 
-    <rpc:service id="addCalculate"
+    <wxz-rpc:service id="addCalculate"
                  interfaceName="com.github.wxz.service.api.AddCalculate"
-                 ref="addCalculateImpl" filter="simpleFilter"></rpc:service>
+                 ref="addCalculateImpl" filter="simpleFilter"></wxz-rpc:service>
 
     <bean id="addCalculateImpl" class="com.github.wxz.service.impl.AddCalculateImpl">
     </bean>
-<!--
-    <rpc:service id="addCalculate1"
-                 interfaceName="com.github.wxz.rpc.service.AddCalculate1"
-                 ref="addCalculateImpl1" filter="simpleFilter"></rpc:service>
 
-    <bean id="addCalculateImpl1" claAddCalculateImplImpl">
-    </bean>-->
-
-    <rpc:registry id="rpcRegistry"
+    <wxz-rpc:registry id="rpcRegistry"
                   ipAddress="${rpc.server.address}"
                   echoApiPort="${rpc.server.echo.api.port}"
-                  protocol="PROTO_STUFF_SERIALIZE" ></rpc:registry>
+                  protocol="PROTO_STUFF_SERIALIZE" ></wxz-rpc:registry>
 
     <bean id="simpleFilter" class="com.github.wxz.core.rpc.filter.support.SimpleFilter">
     </bean>
